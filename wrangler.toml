@@ -1,0 +1,38 @@
+name = "sphixmail"
+main = "src/index.ts"
+compatibility_date = "2025-06-01"
+
+# Set workers_dev to false when using a custom domain
+workers_dev = false
+
+# ---- D1 Database ----
+[[d1_databases]]
+binding = "DB"
+database_name = "sphixmail-db"
+database_id = "23f25a2e-4899-45ce-893a-b65a3709d275"
+
+# ---- Custom domain routes ----
+# CHANGE THIS to your own domain (e.g. sphixmail.example.com)
+[[routes]]
+pattern = "sawith.net"
+custom_domain = true
+
+# ---- Environment variables ----
+# CHANGE THESE to your own values
+[vars]
+APP_NAME = "Sphixmail"
+MAIL_DOMAIN = "sawith.net"
+WEB_HOST = "sawith.net"
+ADMIN_PASSWORD_HASH = "3059e1b6d1ffdc4666159ff1861305ac2c2c33054009026a2a35234d7606d2a7"
+
+# ---- Static assets (web frontend) ----
+[assets]
+directory = "./src/web"
+
+# ---- Cron Triggers: run cleanup every hour ----
+[triggers]
+crons = ["0 * * * *"]
+
+# ---- Observability ----
+[observability]
+enabled = true

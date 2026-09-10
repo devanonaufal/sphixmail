@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Sphixmail</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script>if((localStorage.getItem('theme')||'dark')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
+  <link rel="stylesheet" href="/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    .admin-layout{display:flex;flex-direction:column;min-height:100vh}
+    .admin-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;padding:0 28px;height:60px;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background var(--transition)}
+    .admin-nav-logo{display:flex;align-items:center;gap:10px;margin-right:32px;flex-shrink:0}
+    .admin-nav-logo .nav-logo{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));color:#000;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center}
+    .nav-subtitle{font-size:10px;color:var(--text-3)}
+    .nav-brand{font-weight:700;font-size:14px;color:var(--text-1)}
+    .admin-tabs{display:flex;align-items:center;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+    .admin-tabs::-webkit-scrollbar{display:none}
+    .admin-tab{padding:7px 16px;border:none;background:none;color:var(--text-2);font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer;border-radius:var(--radius-sm);transition:all var(--transition);white-space:nowrap;position:relative}
+    .admin-tab:hover{color:var(--text-1);background:var(--bg-card-hov)}
+    .admin-tab.active{color:var(--amber);font-weight:700}
+    .admin-tab.active::after{content:'';position:absolute;bottom:-11px;left:16px;right:16px;height:2px;background:var(--amber);border-radius:2px 2px 0 0}
+    .admin-nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+    .admin-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--amber-dim));color:#000;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+    .logout-btn{padding:6px 14px;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-2);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all var(--transition)}
+    .logout-btn:hover{border-color:var(--red);color:var(--red)}
+    .admin-content{flex:1;padding:28px 32px;max-width:1280px;width:100%;margin:0 auto;position:relative;z-index:1}
+    .page-heading{font-size:22px;font-weight:800;color:var(--text-1);letter-spacing:-0.5px;margin-bottom:24px}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ── Stat cards — premium gradient */
+    .stats-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+    .stat-card{
+      position:relative;overflow:hidden;
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:24px 22px;
+      transition:all 300ms cubic-bezier(.4,0,.2,1);cursor:default
+    }
+    .stat-card::before{content:'';position:absolute;inset:0;background:var(--cg,transparent);opacity:0;transition:opacity 300ms;border-radius:inherit;pointer-events:none}
+    .stat-card:hover{transform:translateY(-3px);border-color:var(--cb,var(--border-hov));box-shadow:var(--cs,var(--shadow))}
+    .stat-card:hover::before{opacity:1}
+    .sc-amber{--cg:linear-gradient(135deg,rgba(245,158,11,.1),transparent);--cb:rgba(245,158,11,.5);--cs:0 8px 32px rgba(245,158,11,.2)}
+    .sc-cyan{--cg:linear-gradient(135deg,rgba(6,182,212,.1),transparent);--cb:rgba(6,182,212,.5);--cs:0 8px 32px rgba(6,182,212,.2)}
+    .sc-purple{--cg:linear-gradient(135deg,rgba(139,92,246,.1),transparent);--cb:rgba(139,92,246,.5);--cs:0 8px 32px rgba(139,92,246,.2)}
+    .sc-red{--cg:linear-gradient(135deg,rgba(239,68,68,.1),transparent);--cb:rgba(239,68,68,.5);--cs:0 8px 32px rgba(239,68,68,.2)}
+    .stat-card-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px;position:relative;z-index:1}
+    .sc-amber .stat-card-icon{background:rgba(245,158,11,.15)}
+    .sc-cyan .stat-card-icon{background:rgba(6,182,212,.15)}
+    .sc-purple .stat-card-icon{background:rgba(139,92,246,.15)}
+    .sc-red .stat-card-icon{background:rgba(239,68,68,.15)}
+    .stat-card-val{font-size:36px;font-weight:800;color:var(--text-1);line-height:1;margin-bottom:6px;position:relative;z-index:1;font-variant-numeric:tabular-nums}
+    .stat-card-label{font-size:12px;color:var(--text-2);font-weight:500;position:relative;z-index:1}
+
+    /* ── Charts */
+    .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+    .chart-container{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px}
+    .chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
+    .chart-title{font-size:13px;font-weight:700;color:var(--text-1)}
+    .chart-bars{display:flex;align-items:flex-end;gap:4px;height:120px}
+    .chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+    .chart-bar{width:100%;background:var(--amber);border-radius:3px 3px 0 0;min-height:2px;transition:height 400ms cubic-bezier(.4,0,.2,1)}
+    .chart-bar.inbox{background:var(--cyan)}
+    .chart-bar:hover{opacity:.75}
+    .chart-label{font-size:9px;color:var(--text-3);text-align:center;white-space:nowrap}
+    .period-btns{display:flex;gap:6px}
+    .period-btn{padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:none;color:var(--text-2);font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all var(--transition)}
+    .period-btn:hover{border-color:var(--border-hov);color:var(--text-1)}
+    .period-btn.active{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
+
+    /* ── Domain cards */
+    .domain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+    .domain-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;transition:all var(--transition)}
+    .domain-card:hover{border-color:var(--border-hov)}
+    .domain-card-head{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+    .domain-card-name{font-size:15px;font-weight:700;color:var(--text-1);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .domain-card-actions{display:flex;gap:8px}
+    .domain-edit-btn{flex:1;padding:8px;background:var(--bg-card-hov);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:6px}
+    .domain-edit-btn:hover{border-color:var(--amber);color:var(--amber)}
+    .domain-del-btn{width:36px;height:36px;background:var(--red-bg);border:1px solid transparent;border-radius:var(--radius-sm);color:var(--red);font-size:16px;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center}
+    .domain-del-btn:hover{border-color:var(--red)}
+
+    /* ── Generic */
+    .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+    .panel-title{font-size:18px;font-weight:800;color:var(--text-1)}
+    .tbl-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+    table{width:100%;border-collapse:collapse}
+    th{padding:11px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);border-bottom:1px solid var(--border);background:var(--bg-card)}
+    td{padding:12px 16px;font-size:13px;color:var(--text-2);border-bottom:1px solid var(--border)}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:var(--bg-card-hov)}
+    .tbl-action{padding:5px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:none;font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all var(--transition);color:var(--text-2)}
+    .tbl-action.del{color:var(--red);border-color:rgba(239,68,68,.3)}
+    .tbl-action:hover{background:var(--bg-card-hov)}
+    .tbl-action.del:hover{background:var(--red-bg);border-color:var(--red)}
+    .tbl-action:disabled{opacity:.4;cursor:not-allowed}
+
+    .badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .badge-green{background:var(--green-bg);color:var(--green)}
+    .badge-red{background:var(--red-bg);color:var(--red)}
+    .badge-amber{background:var(--amber-soft);color:var(--amber)}
+    .badge-cyan{background:var(--cyan-glow);color:var(--cyan)}
+
+    /* Settings */
+    .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .settings-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px}
+    .settings-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--amber);margin-bottom:16px}
+    .setting-item{margin-bottom:14px}
+    .setting-label{display:block;font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px}
+    .setting-hint{font-size:11px;color:var(--text-3);margin-top:4px}
+    .form-input{width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-size:13px;font-family:var(--font);outline:none;transition:border-color var(--transition)}
+    .form-input:focus{border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-glow)}
+    select.form-input,select.domain-select{width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-size:13px;font-family:var(--font);outline:none;cursor:pointer}
+    .toggle{position:relative;display:inline-block;width:36px;height:20px;vertical-align:middle;margin-left:8px}
+    .toggle input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:20px;cursor:pointer;transition:background 200ms}
+    .toggle input:checked+.toggle-slider{background:var(--amber)}
+    .toggle-slider::before{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;left:3px;top:3px;transition:transform 200ms}
+    .toggle input:checked+.toggle-slider::before{transform:translateX(16px)}
+    .save-btn{padding:9px 22px;background:var(--amber);color:#000;font-weight:700;font-size:12px;font-family:var(--font);border:none;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition);margin-top:8px}
+    .save-btn:hover{background:var(--amber-dim);box-shadow:0 0 20px var(--amber-glow)}
+    input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+    input[type=number]{-moz-appearance:textfield}
+    .export-import-row{display:flex;gap:8px;margin-top:8px}
+    .btn-primary{width:100%;padding:11px;background:var(--amber);color:#000;font-weight:700;font-size:14px;font-family:var(--font);border:none;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition)}
+    .btn-primary:hover{background:var(--amber-dim)}
+    .btn-secondary{padding:9px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all var(--transition);text-align:center}
+    .btn-secondary:hover{border-color:var(--border-hov)}
+
+    /* Login */
+    .page-center{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:var(--bg)}
+    .login-wrap{width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:0}
+    .login-header{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:28px;text-align:center}
+    .login-mark{width:50px;height:50px;border-radius:14px;background:var(--bg-card);border:1px solid var(--border);display:grid;place-items:center;color:var(--amber);font-size:22px}
+    .login-title{font-family:'Space Grotesk','Inter',sans-serif;font-size:1.35rem;font-weight:800;letter-spacing:-0.03em;color:var(--text-1);margin:0}
+    .login-site{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-3);letter-spacing:0.05em;margin:0}
+    .login-card{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.35)}
+    .login-fields{display:flex;flex-direction:column;gap:16px}
+    .login-label{display:block;font-size:0.75rem;font-weight:600;color:var(--text-2);margin-bottom:6px;letter-spacing:0.02em}
+    .login-input-wrap{position:relative}
+    .login-input{width:100%;background:var(--bg-hover);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:var(--font-mono);font-size:0.875rem;color:var(--text-1);outline:none;transition:border-color 160ms}
+    .login-input:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(233,169,60,0.15)}
+    .login-input::placeholder{color:var(--text-3)}
+    .login-input-pw{padding-right:44px}
+    .pw-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;color:var(--text-3);cursor:pointer;border-radius:6px;transition:color 160ms}
+    .pw-toggle:hover{color:var(--text-1)}
+    .login-btn{width:100%;margin-top:6px;padding:13px;background:var(--amber);border:none;border-radius:var(--radius-sm);color:#000;font-family:var(--font);font-size:0.9rem;font-weight:700;cursor:pointer;transition:background 160ms,transform 120ms;letter-spacing:0.01em}
+    .login-btn:hover{background:var(--amber-hover)}
+    .login-btn:active{transform:scale(0.98)}
+    .login-note{margin-top:16px;text-align:center;font-family:var(--font-mono);font-size:0.68rem;color:var(--text-3);line-height:1.5}
+    .error-msg{color:var(--red);font-size:0.75rem;min-height:18px;margin-bottom:2px;text-align:center;display:none}
+    .latest-title{font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:12px}
+
+    @media(max-width:1024px){.stats-cards{grid-template-columns:repeat(2,1fr)}.charts-row{grid-template-columns:1fr}.domain-grid{grid-template-columns:repeat(2,1fr)}.settings-grid{grid-template-columns:1fr}}
+    @media(max-width:768px){.admin-content{padding:20px 16px}.admin-nav{padding:0 16px}.admin-tab.active::after{bottom:-9px}.domain-grid{grid-template-columns:1fr}.stats-cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:480px){.stat-card-val{font-size:24px}.admin-tab{padding:6px 10px;font-size:11px}}
+    /* ── Login-page navbar ─────────────────── */
+    .admin-login-nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 22px;height:60px;background:rgba(11,13,17,0.88);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);transition:background 160ms}
+    .admin-login-brand{display:flex;align-items:center;gap:8px;text-decoration:none;}
+    .admin-login-brand:hover{text-decoration:none;}
+    /* Hide login-page navbar once admin panel is shown */
+    .admin-layout-visible #adminLoginNav{display:none;}
+    /* Shrink login page min-height to account for navbar */
+    #adminLoginNav~#loginPage.page-center{min-height:calc(100vh - 60px);}
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+
+  <!-- Navbar (always visible) -->
+  <nav class="admin-login-nav" id="adminLoginNav">
+    <a class="admin-login-brand" href="/" title="Back to home">
+      <div class="nav-logo" style="width:26px;height:26px;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" style="width:26px;height:26px;display:block">
+          <rect x="4" y="18" width="56" height="38" rx="5" fill="#F5C842"/>
+          <path d="M4 23 L32 8 L60 23" fill="#D4A917" opacity="0.8"/>
+          <rect x="16" y="4" width="32" height="32" rx="5" fill="#FF6B7A"/>
+          <ellipse cx="32" cy="21" rx="10" ry="9" fill="#F5E6C8"/>
+          <ellipse cx="28" cy="20" rx="2.5" ry="2.5" fill="#5C4A3A"/>
+          <ellipse cx="36" cy="20" rx="2.5" ry="2.5" fill="#5C4A3A"/>
+          <path d="M31 24 L32 26 L33 24 Z" fill="#5C4A3A"/>
+          <rect x="26" y="27" width="12" height="5" rx="2" fill="#F5E6C8"/>
+          <rect x="28.5" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+          <rect x="32" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+          <rect x="35.5" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+          <line x1="14" y1="50" x2="50" y2="50" stroke="#B8961A" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span style="font-size:14px;font-weight:700;color:var(--text-primary);letter-spacing:-0.4px;line-height:1;">Sphixmail</span>
+    </a>
+    <span style="font-family:var(--font-mono,monospace);font-size:11px;color:var(--text-secondary);letter-spacing:0.05em;">Admin Panel</span>
+  </nav>
+
+  <!-- Login -->
+  <div class="page-center" id="loginPage">
+    <div class="login-wrap">
+
+      <!-- Header -->
+      <div class="login-header">
+        <div class="login-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="login-title">Admin Panel</h1>
+          <p class="login-site">Sphixmail</p>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="login-card">
+        <div id="loginError" class="error-msg"></div>
+        <div class="login-fields">
+          <div>
+            <label class="login-label" for="loginUser">Username</label>
+            <input type="text" id="loginUser" class="login-input" placeholder="admin" autocomplete="username" />
+          </div>
+          <div>
+            <label class="login-label" for="loginPass">Password</label>
+            <div class="login-input-wrap">
+              <input type="password" id="loginPass" class="login-input login-input-pw" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password" />
+              <button type="button" class="pw-toggle" id="pwToggle" aria-label="Toggle password">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <button class="login-btn" id="loginBtn">Sign in</button>
+        </div>
+      </div>
+
+      <p class="login-note">Limited to 5 attempts per 15 minutes per IP</p>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div class="admin-layout" id="adminLayout" style="display:none">
+    <nav class="admin-nav">
+      <a href="/" class="admin-nav-logo" style="text-decoration:none;cursor:pointer;" title="Back to home">
+        <div class="nav-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <rect x="4" y="18" width="56" height="38" rx="5" fill="#F5C842"/>
+            <path d="M4 23 L32 8 L60 23" fill="#D4A917" opacity="0.8"/>
+            <rect x="16" y="4" width="32" height="32" rx="5" fill="#FF6B7A"/>
+            <ellipse cx="32" cy="21" rx="10" ry="9" fill="#F5E6C8"/>
+            <ellipse cx="28" cy="20" rx="2.5" ry="2.5" fill="#5C4A3A"/>
+            <ellipse cx="36" cy="20" rx="2.5" ry="2.5" fill="#5C4A3A"/>
+            <path d="M31 24 L32 26 L33 24 Z" fill="#5C4A3A"/>
+            <rect x="26" y="27" width="12" height="5" rx="2" fill="#F5E6C8"/>
+            <rect x="28.5" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+            <rect x="32" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+            <rect x="35.5" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+            <line x1="14" y1="50" x2="50" y2="50" stroke="#B8961A" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="nav-brand">Sphixmail</div>
+          <div class="nav-subtitle">Admin Panel</div>
+        </div>
+      </a>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="dashboard">Dashboard</button>
+        <button class="admin-tab" data-tab="domains">Domains</button>
+        <button class="admin-tab" data-tab="apikeys">API Keys</button>
+        <button class="admin-tab" data-tab="settings">Settings</button>
+        <button class="admin-tab" data-tab="cronlogs">Cron Logs</button>
+      </div>
+      <div class="admin-nav-right">
+        <button class="nav-lang" id="themeBtn" title="Ganti tema">🌙</button>
+        <a href="/" class="nav-lang" title="Ke halaman utama" style="text-decoration:none">🏠</a>
+        <div class="admin-avatar">DN</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
+    </nav>
+
+    <div class="admin-content">
+
+      <!-- DASHBOARD -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div class="page-heading">Dashboard</div>
+        <div class="stats-cards">
+          <div class="stat-card sc-amber">
+            <div class="stat-card-icon">✉️</div>
+            <div class="stat-card-val" id="sc-totalMsg">0</div>
+            <div class="stat-card-label">Messages Received</div>
+          </div>
+          <div class="stat-card sc-cyan">
+            <div class="stat-card-icon">📬</div>
+            <div class="stat-card-val" id="sc-totalInbox">0</div>
+            <div class="stat-card-label">Emails Generated</div>
+          </div>
+          <div class="stat-card sc-purple">
+            <div class="stat-card-icon">💾</div>
+            <div class="stat-card-val" id="sc-current">0</div>
+            <div class="stat-card-label">Pesan Tersimpan</div>
+          </div>
+          <div class="stat-card sc-red">
+            <div class="stat-card-icon">👁</div>
+            <div class="stat-card-val" id="sc-unread">0</div>
+            <div class="stat-card-label">Belum Dibaca</div>
+          </div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-container">
+            <div class="chart-head">
+              <span class="chart-title">Messages Received</span>
+              <div class="period-btns">
+                <button class="period-btn active" data-period="7d">7 Hari</button>
+                <button class="period-btn" data-period="6w">6 Minggu</button>
+                <button class="period-btn" data-period="12m">12 Bulan</button>
+                <button class="period-btn" data-period="7y">7 Tahun</button>
+              </div>
+            </div>
+            <div class="chart-bars" id="chartBars"></div>
+          </div>
+          <div class="chart-container">
+            <div class="chart-head"><span class="chart-title">Emails Created</span></div>
+            <div class="chart-bars" id="chartBarsInbox"></div>
+          </div>
+        </div>
+        <div class="latest-title">Email Terbaru</div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>From</th><th>Subject</th><th>Inbox</th><th>Waktu</th></tr></thead>
+          <tbody id="latestMsgTable"></tbody>
+        </table></div>
+      </div>
+
+      <!-- DOMAINS -->
+      <div class="tab-panel" id="tab-domains">
+        <div class="panel-head">
+          <div class="panel-title">Domains</div>
+          <button class="btn-primary" style="width:auto;padding:8px 20px" id="addDomainBtn">+ ADD DOMAIN</button>
+        </div>
+        <div class="domain-grid" id="domainGrid"></div>
+        <div style="display:none"><table><tbody id="domainTable"></tbody></table></div>
+      </div>
+
+      <!-- API KEYS -->
+      <div class="tab-panel" id="tab-apikeys">
+        <div class="panel-head">
+          <div class="panel-title">API Keys</div>
+          <button class="btn-primary" style="width:auto;padding:8px 20px" id="addKeyBtn">+ Buat Key Baru</button>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Label</th><th>Key</th><th>Rate Limit</th><th>Expires</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="apiKeyTable"></tbody>
+        </table></div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="tab-panel" id="tab-messages">
+        <div class="panel-head">
+          <div class="panel-title">Messages</div>
+          <input id="msgFilterInbox" placeholder="Filter by inbox..." style="padding:7px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-size:12px;outline:none;width:240px" />
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>From</th><th>Subject</th><th>Inbox</th><th>Waktu</th><th>Aksi</th></tr></thead>
+          <tbody id="msgTable"></tbody>
+        </table></div>
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+          <button class="btn-secondary" style="width:auto;padding:7px 16px" id="msgPrevBtn">← Prev</button>
+          <span id="msgPageInfo" style="font-size:12px;color:var(--text-3)">Page 1</span>
+          <button class="btn-secondary" style="width:auto;padding:7px 16px" id="msgNextBtn">Next →</button>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="tab-panel" id="tab-settings">
+        <div class="panel-title" style="margin-bottom:20px">Settings</div>
+        <div class="settings-grid">
+          <div class="settings-section">
+            <div class="settings-section-title">General</div>
+            <div class="setting-item"><label class="setting-label">APP_NAME</label><input id="s-app_name" class="form-input" placeholder="Sphixmail" /></div>
+            <div class="setting-item"><label class="setting-label">Footer Text</label><input id="s-footer_text" class="form-input" /></div>
+            <div class="setting-item"><label class="setting-label">Social Links (JSON)</label><input id="s-social_links" class="form-input" placeholder='{"twitter":"","github":""}' /></div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Email &amp; Inbox Rules</div>
+            <div class="setting-item"><label class="setting-label">Forbidden Usernames (JSON array)</label><input id="s-forbidden_usernames" class="form-input" /><div class="setting-hint">Contoh: ["admin","root","abuse"]</div></div>
+            <div class="setting-item"><label class="setting-label">Username Min Length</label><input id="s-username_min" class="form-input" inputmode="numeric" /></div>
+            <div class="setting-item"><label class="setting-label">Username Max Length</label><input id="s-username_max" class="form-input" inputmode="numeric" /></div>
+            <div class="setting-item"><label class="setting-label">Daily Inbox Limit per Session</label><input id="s-daily_inbox_limit" class="form-input" inputmode="numeric" /><div class="setting-hint">0 = unlimited</div></div>
+            <div class="setting-item"><label class="setting-label">Used Email Protection <label class="toggle"><input type="checkbox" id="s-disable_used_email" /><span class="toggle-slider"></span></label></label></div>
+            <div class="setting-item"><label class="setting-label">Max Messages per Inbox</label><input id="s-max_messages_per_inbox" class="form-input" inputmode="numeric" /></div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Auto-Delete</div>
+            <div class="setting-item"><label class="setting-label">Auto-Delete Pesan <label class="toggle"><input type="checkbox" id="s-auto_delete_enabled" /><span class="toggle-slider"></span></label></label></div>
+            <div class="setting-item"><label class="setting-label">Hapus setelah</label>
+              <div style="display:flex;gap:8px">
+                <input id="s-delete_value" class="form-input" inputmode="numeric" style="width:80px" />
+                <select id="s-delete_unit" class="form-input" style="width:auto">
+                  <option value="m">Menit</option><option value="h">Jam</option>
+                  <option value="d" selected>Hari</option><option value="w">Minggu</option><option value="mo">Bulan</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Admin Password</div>
+            <div class="setting-item"><label class="setting-label">Username baru</label><input id="pw-username" class="form-input" placeholder="admin" /></div>
+            <div class="setting-item"><label class="setting-label">Password baru (min 8 karakter)</label><input id="pw-password" class="form-input" type="password" placeholder="••••••••" /></div>
+            <button class="save-btn" id="savePasswordBtn">🔒 Ganti Password</button>
+            <div class="settings-section-title" style="margin-top:20px">Export / Import</div>
+            <div class="export-import-row">
+              <button class="btn-secondary" style="flex:1;padding:8px" id="exportBtn">⬇ Export</button>
+              <label class="btn-secondary" style="flex:1;padding:8px;text-align:center;cursor:pointer">⬆ Import <input type="file" id="importFile" accept=".json" style="display:none" /></label>
+            </div>
+          </div>
+        </div>
+        <!-- Save bar -->
+        <div style="margin-top:20px;display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)">
+          <button class="save-btn" id="saveSettingsBtn" style="margin-top:0;padding:10px 28px;font-size:13px">💾 Simpan Semua Pengaturan</button>
+          <span id="settingsChangedHint" style="font-size:12px;color:var(--amber);display:none">● Ada perubahan yang belum disimpan</span>
+        </div>
+      </div>
+
+      <!-- CRON LOGS -->
+      <div class="tab-panel" id="tab-cronlogs">
+        <div class="panel-title" style="margin-bottom:20px">Cron Logs</div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Waktu</th><th>Pesan</th></tr></thead>
+          <tbody id="cronLogTable"></tbody>
+        </table></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script>
+  (function(){
+    document.addEventListener('contextmenu',e=>e.preventDefault());
+    document.addEventListener('keydown',e=>{
+      if(e.key==='F12'){e.preventDefault();return false;}
+      if(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key.toUpperCase())){e.preventDefault();return false;}
+      if(e.ctrlKey&&e.key.toUpperCase()==='U'){e.preventDefault();return false;}
+      if(e.metaKey&&e.altKey&&e.key.toUpperCase()==='I'){e.preventDefault();return false;}
+    });
+    const t=160;
+    setInterval(()=>{
+      const o=(window.outerWidth-window.innerWidth>t)||(window.outerHeight-window.innerHeight>t);
+      document.body.style.filter=o?'blur(8px)':'';
+    },1000);
+  })();
+  </script>
+  <script src="/admin.js"></script>
+</body>
+</html>

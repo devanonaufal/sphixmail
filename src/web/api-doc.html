@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Documentation — Sphixmail</title>
+  <meta name="description" content="Dokumentasi REST API Sphixmail. Integrasikan layanan email sementara ke bot, app, atau script kamu." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f59e0b'/%3E%3Cstop offset='100%25' style='stop-color:%23d97706'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='46' font-family='Inter,sans-serif' font-size='36' font-weight='700' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script>if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    .api-wrap { max-width: 860px; margin: 0 auto; padding: 32px 24px 80px; position: relative; z-index: 1; }
+    .api-hero { margin-bottom: 32px; }
+    .api-hero h1 { font-size: 28px; font-weight: 800; color: var(--text-1); letter-spacing: -0.8px; margin-bottom: 8px; }
+    .api-hero p { color: var(--text-2); font-size: 14px; line-height: 1.7; }
+
+    .api-key-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+      margin-bottom: 24px;
+    }
+    .api-key-box label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--amber); margin-bottom: 10px; }
+    .api-key-row { display: flex; gap: 8px; }
+    .api-key-input {
+      flex: 1; padding: 10px 14px;
+      background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-1);
+      font-family: 'Courier New', monospace; font-size: 13px; outline: none;
+    }
+    .api-key-input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px var(--amber-glow); }
+    .api-key-vis { background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 16px; padding: 4px; }
+    .api-key-note { font-size: 12px; color: var(--text-3); margin-top: 8px; }
+    .api-key-note a { color: var(--amber); }
+
+    .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .info-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .info-card-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); margin-bottom: 6px; }
+    .info-card-val { font-size: 13px; font-family: 'Courier New', monospace; color: var(--cyan); word-break: break-all; }
+    .info-card-desc { font-size: 12px; color: var(--text-2); margin-top: 6px; line-height: 1.5; }
+
+    .section-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+      color: var(--text-3); margin: 32px 0 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .endpoint-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
+    }
+    .endpoint-head {
+      display: flex; align-items: center; gap: 12px; padding: 16px 20px;
+      cursor: pointer; transition: background var(--transition);
+    }
+    .endpoint-head:hover { background: var(--bg-card-hov); }
+    .method {
+      font-size: 11px; font-weight: 700; padding: 3px 10px;
+      border-radius: 4px; letter-spacing: 0.5px; flex-shrink: 0;
+    }
+    .method.get  { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .method.post { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+    .method.del  { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .endpoint-path { font-family: 'Courier New', monospace; font-size: 13px; color: var(--text-1); flex: 1; }
+    .endpoint-desc { font-size: 12px; color: var(--text-3); flex-shrink: 0; }
+    .endpoint-arrow { color: var(--text-3); font-size: 13px; transition: transform var(--transition); }
+    .endpoint-card.open .endpoint-arrow { transform: rotate(90deg); }
+
+    .endpoint-body { display: none; border-top: 1px solid var(--border); padding: 20px; }
+    .endpoint-card.open .endpoint-body { display: block; }
+
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    .param-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-3); text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 8px 10px; font-size: 12px; color: var(--text-2); border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .param-table td:first-child { font-family: 'Courier New', monospace; color: var(--cyan); }
+
+    .code-block {
+      background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm); padding: 14px 16px;
+      font-family: 'Courier New', monospace; font-size: 12px; color: #d4d4d8;
+      overflow-x: auto; white-space: pre; margin-bottom: 12px; position: relative;
+    }
+    .code-copy {
+      position: absolute; top: 8px; right: 8px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 4px; color: var(--text-3); font-size: 11px;
+      padding: 3px 8px; cursor: pointer; font-family: var(--font);
+    }
+    .code-copy:hover { color: var(--text-1); }
+    .sub-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-3); margin-bottom: 8px; }
+
+    .try-btn {
+      padding: 9px 20px;
+      background: var(--amber); color: #000; font-weight: 700; font-size: 12px; font-family: var(--font);
+      border: none; border-radius: var(--radius-sm); cursor: pointer;
+      transition: all var(--transition); margin-top: 12px;
+    }
+    .try-btn:hover { background: #fbbf24; box-shadow: 0 0 20px var(--amber-glow); }
+    .try-result {
+      margin-top: 12px; display: none;
+    }
+    .try-result.show { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo">S</div>
+      <a href="/" style="text-decoration:none"><span class="nav-title" id="navTitle">Sphixmail</span></a>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-lang" id="themeBtn" title="Ganti tema">🌙</button>
+      <a href="/" class="nav-btn">← Inbox</a>
+      <a href="/admin.html" class="nav-btn nav-btn-admin">Admin</a>
+    </div>
+  </nav>
+
+  <div class="api-wrap">
+    <div class="api-hero">
+      <h1>📡 API Documentation</h1>
+      <p>Integrasikan Sphixmail ke bot, app, atau script menggunakan REST API v1. Semua endpoint membutuhkan API Key dari Admin Panel, kecuali OTP polling.</p>
+    </div>
+
+    <!-- API Key input -->
+    <div class="api-key-box">
+      <label>🔑 API Key untuk Try It Out</label>
+      <div class="api-key-row">
+        <input type="password" id="apiKeyInput" class="api-key-input" placeholder="rm_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+        <button class="api-key-vis" id="apiKeyVis" title="Tampilkan">👁</button>
+      </div>
+      <div class="api-key-note">Buat API Key di <a href="/admin.html">Admin Panel → API Keys</a>, lalu tempel di sini untuk mengaktifkan tombol Try It Out.</div>
+    </div>
+
+    <!-- Info cards -->
+    <div class="info-row">
+      <div class="info-card">
+        <div class="info-card-label">Base URL</div>
+        <div class="info-card-val" id="baseUrl">https://sphixmail.example.com</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Autentikasi</div>
+        <div class="info-card-val">/pub/[endpoint]/[apikey]</div>
+        <div class="info-card-desc">API key ditempatkan langsung di URL path. Buat key di Admin → API Keys.</div>
+      </div>
+    </div>
+
+    <!-- Endpoints -->
+    <div class="section-title">🌐 Domains</div>
+    <div class="endpoint-card" id="ep-domains">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/pub/domains/<span style="color:var(--amber)">[apikey]</span></span>
+        <span class="endpoint-desc">List domain aktif</span>
+        <span class="endpoint-arrow">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="sub-label">Parameters</div>
+        <table class="param-table"><thead><tr><th>Param</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody><tr><td>[apikey]</td><td>path</td><td>API Key dari Admin Panel</td></tr></tbody></table>
+        <div class="sub-label">Example Request</div>
+        <div class="code-block" id="curl-domains"><button class="code-copy" onclick="copyCode('curl-domains')">copy</button>curl https://sphixmail.example.com/pub/domains/YOUR_API_KEY</div>
+        <div class="sub-label">Example Response</div>
+        <div class="code-block">{"success":true,"count":2,"domains":[{"domain":"mail.example.com","type":"open","added_at":"2026-01-01T00:00:00Z"}]}</div>
+        <button class="try-btn" onclick="tryIt('domains')">▶ Try It Out</button>
+        <div class="try-result" id="try-domains"><div class="sub-label">Response</div><div class="code-block" id="try-domains-out"></div></div>
+      </div>
+    </div>
+
+    <div class="section-title">✉ Email</div>
+    <div class="endpoint-card" id="ep-email">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/pub/email/<span style="color:var(--amber)">[email]/[apikey]</span></span>
+        <span class="endpoint-desc">Validasi email</span>
+        <span class="endpoint-arrow">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="sub-label">Parameters</div>
+        <table class="param-table"><thead><tr><th>Param</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td>[email]</td><td>path</td><td>Alamat email lengkap (URL-encoded)</td></tr>
+          <tr><td>[apikey]</td><td>path</td><td>API Key dari Admin Panel</td></tr>
+        </tbody></table>
+        <div class="sub-label">Example Request</div>
+        <div class="code-block" id="curl-email"><button class="code-copy" onclick="copyCode('curl-email')">copy</button>curl https://sphixmail.example.com/pub/email/user%40mail.example.com/YOUR_API_KEY</div>
+        <div class="sub-label">Example Response</div>
+        <div class="code-block">{"success":true,"email":"user@mail.example.com","local":"user","domain":"mail.example.com","message":"Email is valid and ready to use"}</div>
+        <button class="try-btn" onclick="tryItEmail()">▶ Try It Out</button>
+        <div class="try-result" id="try-email">
+          <input id="try-email-input" placeholder="user@mail.example.com" style="width:100%;margin-bottom:8px;padding:8px 12px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:6px;color:var(--text-1);font-family:monospace;font-size:12px;outline:none;" />
+          <div class="sub-label">Response</div><div class="code-block" id="try-email-out"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">📬 Messages</div>
+    <div class="endpoint-card" id="ep-messages">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/pub/messages/<span style="color:var(--amber)">[email]/[apikey]</span></span>
+        <span class="endpoint-desc">Ambil semua pesan</span>
+        <span class="endpoint-arrow">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="sub-label">Parameters</div>
+        <table class="param-table"><thead><tr><th>Param</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td>[email]</td><td>path</td><td>Alamat email inbox</td></tr>
+          <tr><td>[apikey]</td><td>path</td><td>API Key</td></tr>
+          <tr><td>limit</td><td>query</td><td>Batas jumlah pesan (opsional, default: semua)</td></tr>
+        </tbody></table>
+        <div class="sub-label">Example Request</div>
+        <div class="code-block" id="curl-messages"><button class="code-copy" onclick="copyCode('curl-messages')">copy</button>curl "https://sphixmail.example.com/pub/messages/user%40mail.example.com/YOUR_API_KEY?limit=10"</div>
+        <div class="sub-label">Example Response</div>
+        <div class="code-block">{"success":true,"email":"user@mail.example.com","count":1,"messages":[{"id":"msg_123","from":"noreply@github.com","subject":"Verify your email","preview":"Click the link...","body_text":"...","body_html":"...","received_at":"2026-09-10T00:00:00Z"}]}</div>
+        <button class="try-btn" onclick="tryItMessages()">▶ Try It Out</button>
+        <div class="try-result" id="try-messages">
+          <input id="try-msg-input" placeholder="user@mail.example.com" style="width:100%;margin-bottom:8px;padding:8px 12px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:6px;color:var(--text-1);font-family:monospace;font-size:12px;outline:none;" />
+          <div class="sub-label">Response</div><div class="code-block" id="try-messages-out"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint-card" id="ep-delete">
+      <div class="endpoint-head">
+        <span class="method del">DELETE</span>
+        <span class="endpoint-path">/pub/message/<span style="color:var(--amber)">[message_id]/[apikey]</span></span>
+        <span class="endpoint-desc">Hapus pesan</span>
+        <span class="endpoint-arrow">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="sub-label">Parameters</div>
+        <table class="param-table"><thead><tr><th>Param</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td>[message_id]</td><td>path</td><td>ID pesan (dari endpoint messages)</td></tr>
+          <tr><td>[apikey]</td><td>path</td><td>API Key</td></tr>
+        </tbody></table>
+        <div class="sub-label">Example Request</div>
+        <div class="code-block" id="curl-delete"><button class="code-copy" onclick="copyCode('curl-delete')">copy</button>curl -X DELETE https://sphixmail.example.com/pub/message/msg_abc123/YOUR_API_KEY</div>
+        <div class="sub-label">Example Response</div>
+        <div class="code-block">{"success":true,"message":"Message deleted successfully","deleted_id":"msg_abc123"}</div>
+      </div>
+    </div>
+
+    <div class="section-title">📊 Stats</div>
+    <div class="endpoint-card" id="ep-stats">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/pub/stats/<span style="color:var(--amber)">[apikey]</span></span>
+        <span class="endpoint-desc">Statistik sistem</span>
+        <span class="endpoint-arrow">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="sub-label">Parameters</div>
+        <table class="param-table"><thead><tr><th>Param</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td>[apikey]</td><td>path</td><td>API Key</td></tr>
+          <tr><td>filters</td><td>query</td><td>Comma-separated: most_popular_receiver, total_messages, unread_messages, latest_messages (default: semua)</td></tr>
+        </tbody></table>
+        <div class="sub-label">Example Request</div>
+        <div class="code-block" id="curl-stats"><button class="code-copy" onclick="copyCode('curl-stats')">copy</button>curl "https://sphixmail.example.com/pub/stats/YOUR_API_KEY?filters=total_messages,unread_messages"</div>
+        <button class="try-btn" onclick="tryIt('stats')">▶ Try It Out</button>
+        <div class="try-result" id="try-stats"><div class="sub-label">Response</div><div class="code-block" id="try-stats-out"></div></div>
+      </div>
+    </div>
+
+    <div class="section-title">⚡ OTP Long-Polling</div>
+    <div class="endpoint-card" id="ep-otp">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/pub/inbox/<span style="color:var(--amber)">[email]</span>/wait-otp</span>
+        <span class="endpoint-desc">Tunggu OTP masuk · Public (no key)</span>
+        <span class="endpoint-arrow">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="sub-label">Parameters</div>
+        <table class="param-table"><thead><tr><th>Param</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td>[email]</td><td>path</td><td>Alamat email inbox</td></tr>
+          <tr><td>timeout</td><td>query</td><td>Max detik tunggu (default: 30, max: 60)</td></tr>
+          <tr><td>subject_contains</td><td>query</td><td>Filter subject (opsional)</td></tr>
+          <tr><td>after</td><td>query</td><td>Hanya ambil pesan setelah message_id ini</td></tr>
+        </tbody></table>
+        <div class="sub-label">Example Request</div>
+        <div class="code-block" id="curl-otp"><button class="code-copy" onclick="copyCode('curl-otp')">copy</button>curl "https://sphixmail.example.com/pub/inbox/user%40mail.example.com/wait-otp?timeout=30&subject_contains=OTP"</div>
+        <div class="sub-label">Response (found)</div>
+        <div class="code-block">{"found":true,"message":{"id":"msg_abc","from":"noreply@service.com","subject":"Your OTP","received_at":"2026-09-10T00:00:00Z"},"otp":"123456"}</div>
+        <div class="sub-label">Response (timeout)</div>
+        <div class="code-block">{"found":false,"message":"Timeout - no email received"}</div>
+        <div class="api-key-note" style="margin-top:8px">ℹ OTP diekstrak dengan regex <code>\b\d{4,8}\b</code> dari body. Endpoint ini <strong>tidak membutuhkan API key</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="/api-doc.js"></script>
+</body>
+</html>
