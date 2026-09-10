@@ -152,6 +152,24 @@
     .error-msg{color:var(--red);font-size:0.75rem;min-height:18px;margin-bottom:2px;text-align:center;display:none}
     .latest-title{font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:12px}
 
+    /* ── Custom Modal Dialog ───────────────────────────── */
+    .adm-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:9999;display:none;align-items:center;justify-content:center}
+    .adm-modal-overlay.open{display:flex}
+    .adm-modal{background:var(--bg-card,#17191d);border:1px solid var(--border);border-radius:16px;padding:28px 28px 22px;min-width:340px;max-width:440px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.5);animation:admSlideIn .18s cubic-bezier(.4,0,.2,1)}
+    @keyframes admSlideIn{from{opacity:0;transform:translateY(-12px) scale(.97)}to{opacity:1;transform:none}}
+    .adm-modal-title{font-size:16px;font-weight:800;color:var(--text-1);margin-bottom:20px}
+    .adm-modal-label{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px;letter-spacing:.02em}
+    .adm-modal-input{width:100%;background:var(--bg-hover,#212326);border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-family:var(--font-mono);font-size:13px;color:var(--text-1);outline:none;transition:border-color 150ms;box-sizing:border-box}
+    .adm-modal-input:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(233,169,60,.15)}
+    .adm-modal-body{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:4px}
+    .adm-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+    .adm-modal-cancel{padding:8px 18px;background:none;border:1px solid var(--border);border-radius:8px;color:var(--text-2);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all 150ms}
+    .adm-modal-cancel:hover{border-color:var(--border-hov);color:var(--text-1)}
+    .adm-modal-confirm{padding:8px 18px;background:var(--amber);border:none;border-radius:8px;color:#000;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background 150ms}
+    .adm-modal-confirm:hover{background:var(--amber-hover)}
+    .adm-modal-confirm.danger{background:var(--red,#ef4444);color:#fff}
+    .adm-modal-confirm.danger:hover{background:#dc2626}
+
     @media(max-width:1024px){.stats-cards{grid-template-columns:repeat(2,1fr)}.charts-row{grid-template-columns:1fr}.domain-grid{grid-template-columns:repeat(2,1fr)}.settings-grid{grid-template-columns:1fr}}
     @media(max-width:768px){.admin-content{padding:20px 16px}.admin-nav{padding:0 16px}.admin-tab.active::after{bottom:-9px}.domain-grid{grid-template-columns:1fr}.stats-cards{grid-template-columns:1fr 1fr}}
     @media(max-width:480px){.stat-card-val{font-size:24px}.admin-tab{padding:6px 10px;font-size:11px}}
@@ -447,5 +465,16 @@
   })();
   </script>
   <script src="/admin.js"></script>
+  <!-- Custom Modal Dialog -->
+  <div class="adm-modal-overlay" id="admModalOverlay">
+    <div class="adm-modal" id="admModal">
+      <div class="adm-modal-title" id="admModalTitle"></div>
+      <div id="admModalContent"></div>
+      <div class="adm-modal-actions">
+        <button class="adm-modal-cancel" id="admModalCancel">Batal</button>
+        <button class="adm-modal-confirm" id="admModalConfirm">OK</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

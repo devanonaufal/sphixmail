@@ -36,6 +36,64 @@ function parseUTC(iso){ if(!iso) return new Date(); return new Date(iso.endsWith
 function rel(iso){ const s=Math.floor((Date.now()-parseUTC(iso))/1000); if(s<60)return s+'s ago'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
 function toWIB(iso){ return parseUTC(iso).toLocaleString('id-ID',{timeZone:'Asia/Jakarta',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' WIB'; }
 
+/* ── Custom Modal Helpers ────────────────────────── */
+function _openModal() { document.getElementById('admModalOverlay').classList.add('open'); }
+function _closeModal() { document.getElementById('admModalOverlay').classList.remove('open'); }
+
+// admPrompt(title, fields) → Promise<object|null>
+// fields: [{id, label, placeholder, value}]
+function admPrompt(title, fields) {
+  return new Promise(resolve => {
+    const titleEl = document.getElementById('admModalTitle');
+    const content = document.getElementById('admModalContent');
+    const confirmBtn = document.getElementById('admModalConfirm');
+    const cancelBtn = document.getElementById('admModalCancel');
+    titleEl.textContent = title;
+    confirmBtn.textContent = 'Tambah';
+    confirmBtn.className = 'adm-modal-confirm';
+    content.innerHTML = fields.map(f => `
+      <div style="margin-bottom:14px">
+        <div class="adm-modal-label">${f.label}</div>
+        <input id="_mf_${f.id}" class="adm-modal-input" placeholder="${f.placeholder||''}" value="${f.value||''}" />
+      </div>`).join('');
+    _openModal();
+    // Focus first input
+    setTimeout(() => document.getElementById('_mf_'+fields[0].id)?.focus(), 60);
+    const done = (ok) => {
+      _closeModal();
+      confirmBtn.onclick = null; cancelBtn.onclick = null;
+      if (!ok) { resolve(null); return; }
+      const result = {};
+      fields.forEach(f => { result[f.id] = document.getElementById('_mf_'+f.id)?.value || ''; });
+      resolve(result);
+    };
+    confirmBtn.onclick = () => done(true);
+    cancelBtn.onclick = () => done(false);
+    // Enter key submits
+    content.onkeydown = e => { if(e.key==='Enter') done(true); };
+  });
+}
+
+// admConfirm(title, body, danger?) → Promise<boolean>
+function admConfirm(title, body, danger = false) {
+  return new Promise(resolve => {
+    const titleEl = document.getElementById('admModalTitle');
+    const content = document.getElementById('admModalContent');
+    const confirmBtn = document.getElementById('admModalConfirm');
+    const cancelBtn = document.getElementById('admModalCancel');
+    titleEl.textContent = title;
+    content.innerHTML = `<div class="adm-modal-body">${body}</div>`;
+    confirmBtn.textContent = danger ? 'Hapus' : 'Ya';
+    confirmBtn.className = 'adm-modal-confirm' + (danger ? ' danger' : '');
+    _openModal();
+    const done = (ok) => { _closeModal(); confirmBtn.onclick=null; cancelBtn.onclick=null; resolve(ok); };
+    confirmBtn.onclick = () => done(true);
+    cancelBtn.onclick = () => done(false);
+  });
+}
+
+/* ────────────────────────────────────────── */
+
 async function api(method, path, body){
   const r = await fetch('/admin'+path, {
     method, headers:{'Content-Type':'application/json'},
@@ -178,13 +236,21 @@ async function loadDomains(){
 }
 async function toggleDomainActive(domain,active){ await api('PATCH',`/domains/${encodeURIComponent(domain)}`,{is_active:!active}); loadDomains(); }
 async function toggleDomainType(domain,type){ await api('PATCH',`/domains/${encodeURIComponent(domain)}`,{type:type==='open'?'member':'open'}); loadDomains(); }
-async function delDomain(domain){ if(!confirm(`Hapus domain ${domain}?`)) return; await api('DELETE',`/domains/${encodeURIComponent(domain)}`); loadDomains(); toast('Domain dihapus'); }
+async function delDomain(domain){
+  const ok = await admConfirm('Hapus Domain', `Hapus domain <b>${esc(domain)}</b>? Tindakan ini tidak dapat dibatalkan.`, true);
+  if(!ok) return;
+  await api('DELETE',`/domains/${encodeURIComponent(domain)}`);
+  loadDomains(); toast('Domain dihapus');
+}
 window.toggleDomainActive=toggleDomainActive; window.toggleDomainType=toggleDomainType; window.delDomain=delDomain;
 
-$('addDomainBtn').addEventListener('click',async()=>{
-  const domain=prompt('Domain baru (contoh: mail.example.com):'); if(!domain) return;
-  await api('POST','/domains',{domain:domain.trim(),type:'open'});
-  loadDomains(); toast('Domain ditambahkan','success');
+$('addDomainBtn').addEventListener('click', async () => {
+  const result = await admPrompt('Tambah Domain', [
+    { id: 'domain', label: 'Domain', placeholder: 'contoh: mail.example.com' }
+  ]);
+  if (!result || !result.domain.trim()) return;
+  await api('POST', '/domains', { domain: result.domain.trim(), type: 'open' });
+  loadDomains(); toast('Domain ditambahkan', 'success');
 });
 
 /* ─── API KEYS ──────────────────────────────────────────── */
@@ -202,17 +268,30 @@ async function loadApiKeys(){
       <button class="tbl-action del" onclick="deleteKey('${esc(k.key_full)}')">Hapus</button>
     </td></tr>`).join('');
 }
-async function revokeKey(key){ if(!confirm('Nonaktifkan API Key ini?')) return; await api('PATCH',`/api-keys/${encodeURIComponent(key)}/revoke`); loadApiKeys(); toast('Key dinonaktifkan'); }
-async function deleteKey(key){ if(!confirm('Hapus permanen API Key ini?')) return; await api('DELETE',`/api-keys/${encodeURIComponent(key)}`); loadApiKeys(); toast('Key dihapus'); }
+async function revokeKey(key){
+  const ok = await admConfirm('Nonaktifkan API Key', 'API Key ini akan dinonaktifkan dan tidak bisa digunakan lagi.');
+  if(!ok) return;
+  await api('PATCH',`/api-keys/${encodeURIComponent(key)}/revoke`);
+  loadApiKeys(); toast('Key dinonaktifkan');
+}
+async function deleteKey(key){
+  const ok = await admConfirm('Hapus API Key', 'Hapus permanen API Key ini? Tindakan ini tidak dapat dibatalkan.', true);
+  if(!ok) return;
+  await api('DELETE',`/api-keys/${encodeURIComponent(key)}`);
+  loadApiKeys(); toast('Key dihapus');
+}
 window.revokeKey=revokeKey; window.deleteKey=deleteKey;
 
-$('addKeyBtn').addEventListener('click',async()=>{
-  const label=prompt('Label untuk key baru:') || '';
-  const rateStr=prompt('Rate limit per menit (default 60):','60');
-  const rate=parseInt(rateStr)||60;
-  const data=await api('POST','/api-keys',{label,rate_limit_per_min:rate});
-  await navigator.clipboard.writeText(data.key).catch(()=>{});
-  toast(`Key dibuat & disalin: ${data.key.slice(0,16)}...`,'success');
+$('addKeyBtn').addEventListener('click', async () => {
+  const result = await admPrompt('Buat API Key', [
+    { id: 'label', label: 'Label', placeholder: 'contoh: Bot Saya' },
+    { id: 'rate',  label: 'Rate limit per menit', placeholder: '60', value: '60' },
+  ]);
+  if (!result) return;
+  const rate = parseInt(result.rate) || 60;
+  const data = await api('POST', '/api-keys', { label: result.label, rate_limit_per_min: rate });
+  await navigator.clipboard.writeText(data.key).catch(() => {});
+  toast(`Key dibuat & disalin: ${data.key.slice(0,16)}...`, 'success');
   loadApiKeys();
 });
 
