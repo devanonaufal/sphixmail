@@ -9,13 +9,11 @@ import {
   ensureSession,
   linkInboxToSession,
   unlinkInboxFromSession,
-  isInboxInSession,
   getActiveDomains,
   upsertDomain,
   incrementStat,
   logInboxCreated,
   countTodayInboxes,
-  emailUsedByOtherSession,
 } from '../db/queries';
 import { generateUniqueAddress } from '../utils/random-address';
 import { getSetting } from '../utils/settings';
@@ -126,11 +124,6 @@ api.post('/inboxes', async (c) => {
 
     address = `${requested}@${domain}`;
 
-    // Used-email protection
-    const disableUsedEmail = await getSetting<boolean>(db, 'disable_used_email') ?? false;
-    if (disableUsedEmail && await emailUsedByOtherSession(db, address, sid)) {
-      return c.json({ error: 'This email address is already used by another session' }, 409);
-    }
   } else {
     address = await generateUniqueAddress((addr) => inboxExists(db, addr), domain);
   }
@@ -160,14 +153,7 @@ api.delete('/inboxes/:address', async (c) => {
 
 // ---- GET /inboxes/:address/messages ----
 api.get('/inboxes/:address/messages', async (c) => {
-  const sid = sessionId(c);
-  if (!sid) return c.json({ error: 'Missing x-session-id' }, 400);
-
   const address = decodeURIComponent(c.req.param('address'));
-  if (!(await isInboxInSession(c.env.DB, sid, address))) {
-    return c.json({ error: 'Inbox not in this session' }, 403);
-  }
-
   const messages = await getMessages(c.env.DB, address);
   return c.json(messages);
 });

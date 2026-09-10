@@ -386,6 +386,8 @@ a:hover { text-decoration: underline; }
   color: var(--text-1); outline: none;
 }
 .dm-field input::placeholder { color: var(--text-3); }
+.dm-field input::-webkit-contacts-auto-fill-button,
+.dm-field input::-webkit-credentials-auto-fill-button { visibility: hidden; display: none !important; }
 .dm-apply {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 6px; padding: 0 14px; flex-shrink: 0;
@@ -486,7 +488,6 @@ a:hover { text-decoration: underline; }
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  overflow: hidden;
   min-height: 520px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 20px rgba(0,0,0,0.06);
 }
@@ -548,7 +549,7 @@ a:hover { text-decoration: underline; }
 .sb-stats { display: none; }
 
 /* Message list */
-.msg-list { flex: 1; overflow-y: auto; }
+.msg-list { flex: 1; overflow-y: auto; overflow-x: hidden; }
 
 .msg-item {
   padding: 14px 20px;
@@ -749,6 +750,7 @@ a:hover { text-decoration: underline; }
   }
 
   .msg-item { padding: 14px 16px; }
+  .msg-item:first-child { scroll-margin-top: 100px; }
 
   .modal { margin: 0; border-radius: var(--radius) var(--radius) 0 0; max-height: 90vh; }
   .modal-overlay { align-items: flex-end; padding: 0; }

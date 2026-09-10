@@ -14,6 +14,7 @@ import {
   getAllApiKeys,
   createApiKey,
   revokeApiKey,
+  deleteApiKey,
   getMessages,
   getMessage,
   deleteMessage,
@@ -234,7 +235,7 @@ admin.patch('/api-keys/:key/revoke', requireAdmin, async (c) => {
 });
 
 admin.delete('/api-keys/:key', requireAdmin, async (c) => {
-  await c.env.DB.prepare('DELETE FROM api_keys WHERE key = ?').bind(c.req.param('key')).run();
+  await deleteApiKey(c.env.DB, c.req.param('key'));
   return c.json({ ok: true });
 });
 

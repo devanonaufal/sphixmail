@@ -238,8 +238,10 @@ async function loadInboxes() {
   const found = cachedValid && inboxList.find(i => i.address === cached);
   if (found) {
     setActiveInbox(found.address);
+  } else if (cachedValid) {
+    // Not in session but valid domain — restore directly (public shared model)
+    setActiveInbox(cached);
   } else if (inboxList.length > 0 && !currentAddress) {
-    // Pick first inbox whose domain is still active
     const valid = inboxList.find(i => activeDomains.includes(i.address.split('@')[1]));
     if (valid) setActiveInbox(valid.address);
   }
@@ -253,6 +255,12 @@ function renderInboxList() {
 function setActiveInbox(address) {
   currentAddress = address;
   localStorage.setItem('activeInbox', address);
+  // Restore username input field
+  const parts = address.split('@');
+  const usernameEl = document.getElementById('usernameInput');
+  if (usernameEl && parts[0]) usernameEl.value = parts[0];
+  const domainEl = document.getElementById('domainSelect');
+  if (domainEl && parts[1]) domainEl.value = parts[1];
   // Update both old and new email display elements
   const disp1 = document.getElementById('currentEmailDisplay');
   if (disp1) disp1.textContent = address;
@@ -319,7 +327,8 @@ function extractOTP(subject, body) {
 
 function renderMessages(msgs) {
   const t = LANG[lang];
-  document.getElementById('msgBadge').textContent = t.msgBadge(msgs.length);
+  const badgeEl = document.getElementById('msgBadge');
+  if (badgeEl) badgeEl.textContent = t.msgBadge(msgs.length);
 
   const list = document.getElementById('msgList');
   if (msgs.length === 0) {
@@ -340,6 +349,8 @@ function renderMessages(msgs) {
     const su = document.getElementById('emptySub'); if(su) su.textContent = t.emptySub;
     return;
   }
+  // Remove emptyState if still in DOM from static HTML or previous render
+  document.getElementById('emptyState')?.remove();
   list.innerHTML = msgs.map(m => {
     const otp = extractOTP(m.subject, m.body_text || m.body);
     const sender = m.from_address || '';
@@ -385,18 +396,15 @@ function openMessage(msg) {
   body.innerHTML = '';
   if (msg.body_html) {
     const frame = document.createElement('iframe');
-    // allow-same-origin needed for doc.write; no allow-scripts → email JS blocked
     frame.setAttribute('sandbox', 'allow-same-origin');
     frame.style.cssText = 'width:100%;border:none;min-height:200px;border-radius:8px';
-    frame.addEventListener('load', () => {
-      try {
-        const doc = frame.contentDocument;
-        doc.open(); doc.write(msg.body_html); doc.close();
-        // Auto-resize to content height
-        frame.style.height = (doc.body?.scrollHeight || 300) + 32 + 'px';
-      } catch { /* cross-origin guard */ }
-    });
     body.appendChild(frame);
+    // Write after appended so contentDocument is accessible
+    try {
+      const doc = frame.contentDocument;
+      doc.open(); doc.write(msg.body_html); doc.close();
+      frame.style.height = (doc.body?.scrollHeight || 300) + 32 + 'px';
+    } catch { /* cross-origin guard */ }
   } else {
     body.style.whiteSpace = 'pre-wrap';
     body.textContent = msg.body || '(empty)';
@@ -438,10 +446,14 @@ function wireEvents() {
     applyTheme(getTheme() === 'dark' ? 'light' : 'dark');
   });
 
-  document.getElementById('createBtn').addEventListener('click', () => {
+  document.getElementById('createBtn').addEventListener('click', async () => {
     const val = document.getElementById('usernameInput').value.trim();
+    const domain = document.getElementById('domainSelect').value;
     if (!val) { toast(LANG[lang].usernameRequired, 'error'); return; }
-    createInbox(val);
+    await ensureSession();
+    const address = `${val}@${domain}`;
+    setActiveInbox(address);
+    toast(LANG[lang].created || 'Inbox opened', 'success');
   });
 
   document.getElementById('randomBtn').addEventListener('click', () => {
@@ -519,11 +531,7 @@ async function init() {
   await ensureSession();
   await loadConfig();
   await loadInboxes();
-  loadStats(); // non-blocking, fills header figures
-
-  if (inboxList.length === 0) {
-    await createInbox(null);
-  }
+  loadStats();
   restartPoll();
 }
 

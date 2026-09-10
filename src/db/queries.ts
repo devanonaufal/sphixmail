@@ -232,6 +232,10 @@ export async function revokeApiKey(db: D1Database, key: string): Promise<void> {
   await db.prepare('UPDATE api_keys SET is_active = 0 WHERE key = ?').bind(key).run();
 }
 
+export async function deleteApiKey(db: D1Database, key: string): Promise<void> {
+  await db.prepare('DELETE FROM api_keys WHERE key = ?').bind(key).run();
+}
+
 export async function touchApiKey(db: D1Database, key: string): Promise<void> {
   await db.prepare("UPDATE api_keys SET last_used_at = datetime('now') WHERE key = ?").bind(key).run();
 }

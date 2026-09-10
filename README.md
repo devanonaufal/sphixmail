@@ -44,7 +44,7 @@
 | **REST API** | ✅ Built-in with API Keys | Limited / paid |
 | **Admin Panel** | ✅ Full-featured web UI | ❌ None |
 | **OTP Auto-extract** | ✅ Automatic | ❌ Manual |
-| **Multi-domain** | ✅ Unlimited | Limited |
+| **Multi-domain** | ✅ Unlimited via Admin Panel | Limited |
 | **Open source** | ✅ MIT License | Varies |
 
 ---
@@ -57,7 +57,7 @@
 - Multiple domains supported — user can pick at creation time
 - Emails auto-refresh every 10 seconds — no manual refresh needed
 - HTML emails rendered safely inside an isolated iframe
-- Session and selected email persisted via `localStorage` across refreshes
+- Last active inbox and selected domain persisted via `localStorage` across refreshes
 
 ### 🕐 Realtime WIB Clock
 - Live clock (Asia/Jakarta / WIB) displayed in the navbar
@@ -105,7 +105,6 @@ Everything configurable from the admin panel — no file edits or redeployment n
 | Forbidden usernames | Block reserved words (admin, root, etc.) |
 | Username length | Min and max character limits |
 | Daily inbox limit | Max inboxes per session per day |
-| Used-email protection | Prevent reuse across sessions |
 | Auto-delete messages | Delete after X minutes/hours/days/weeks |
 | Max messages per inbox | Storage cap per inbox |
 | Export / Import settings | Backup and restore configuration |
@@ -204,7 +203,7 @@ Edit the `[vars]` section in `wrangler.toml`:
 ```toml
 [vars]
 APP_NAME = "Sphixmail"
-MAIL_DOMAIN = "mail.yourdomain.com"       # Domain to receive email on
+MAIL_DOMAIN = "mail.yourdomain.com"       # Primary domain (additional domains added via Admin Panel)
 WEB_HOST = "sphixmail.yourdomain.com"     # Domain for the web UI
 ADMIN_PASSWORD_HASH = "your-sha256-hash"  # See Step 4
 ```
@@ -274,7 +273,7 @@ database_id = "YOUR-DATABASE-ID"
 
 [vars]
 APP_NAME = "Sphixmail"
-MAIL_DOMAIN = "mail.example.com"         # comma-separated for multiple domains
+MAIL_DOMAIN = "mail.example.com"         # Primary domain only — add more via Admin Panel
 WEB_HOST = "sphixmail.example.com"
 ADMIN_PASSWORD_HASH = "your-sha256-hash"
 
@@ -290,11 +289,10 @@ crons = ["0 * * * *"]   # automatic cleanup every hour
 | `username_min` | Minimum username length | `3` |
 | `username_max` | Maximum username length | `30` |
 | `daily_inbox_limit` | Max inboxes per session per day (0 = unlimited) | `10` |
-| `disable_used_email` | Prevent reuse of previously used emails | `false` |
 | `auto_delete_enabled` | Enable automatic message deletion | `false` |
 | `delete_value` | Amount to delete after (e.g. `7`) | `7` |
 | `delete_unit` | Unit: `m`=minute, `h`=hour, `d`=day, `w`=week, `mo`=month | `d` |
-| `max_messages_per_inbox` | Max stored messages per inbox | `50` |
+| `max_messages_per_inbox` | Max stored messages per inbox (0 = unlimited) | `50` |
 
 ---
 
@@ -410,7 +408,7 @@ curl "https://yourmail.com/pub/inbox/user%40mail.example.com/wait-otp?timeout=30
 - **Lockout**: 5 failed login attempts → 15-minute lockout
 - **API Keys**: stored in database, revocable at any time, optional expiry date
 - **Rate limiting**: per-minute request cap per API key
-- **Inbox ownership**: messages only accessible by the session that created the inbox
+- **Public inbox model**: any address is readable by anyone — designed for disposable/OTP use
 - **Safe HTML email**: rendered inside a sandboxed iframe — no external scripts execute
 - **Password hashing**: SHA-256 via Web Crypto API
 - **Anti-devtools**: right-click and keyboard shortcut blocking on the public UI
@@ -440,18 +438,15 @@ Tables created automatically on first deploy:
 
 ## Multi-Domain
 
-Support multiple email domains simultaneously:
+Support multiple email domains simultaneously — **no redeployment needed**:
 
-1. Add all domains to `wrangler.toml`:
-   ```toml
-   MAIL_DOMAIN = "mail.domain1.com,mail.domain2.com"
-   ```
+1. Enable Email Routing for each domain in Cloudflare Dashboard and route catch-all to the `sphixmail` worker
+2. Open **Admin Panel → Domains** → click **Add Domain**
+3. Enter the domain name → Save
 
-2. Enable Email Routing for each domain in Cloudflare Dashboard and route catch-all to the `sphixmail` worker
+The new domain immediately appears in the frontend dropdown and starts receiving emails.
 
-3. Redeploy: `npm run deploy`
-
-4. New domains appear automatically in **Admin Panel → Domains**
+> `MAIL_DOMAIN` in `wrangler.toml` is only used as the initial seed domain on first deploy. All domain management after that is done through the Admin Panel.
 
 ---
 
