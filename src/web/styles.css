@@ -136,7 +136,7 @@ a:hover { text-decoration: underline; }
   transition: background var(--transition), border-color var(--transition);
 }
 
-.nav-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.nav-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; flex: 1; }
 .nav-brand:hover { text-decoration: none; }
 .nav-logo {
   width: 28px; height: 28px;
@@ -152,7 +152,7 @@ a:hover { text-decoration: underline; }
   line-height: 1;
 }
 
-.nav-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.nav-actions { display: flex; align-items: center; gap: 6px; flex: 1; justify-content: flex-end; }
 
 /* EN | ID toggle — pill style */
 .lang-toggle {
@@ -213,16 +213,18 @@ a:hover { text-decoration: underline; }
   box-shadow: 0 0 12px var(--amber-glow);
 }
 
-/* Realtime WIB clock */
+/* Realtime WIB clock — centered via flexbox */
 .nav-clock {
-  margin-left: auto;
-  margin-right: 8px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 500;
   color: var(--text-3);
   letter-spacing: 0.03em;
   white-space: nowrap;
+  pointer-events: none;
 }
 @media (max-width: 768px) { .nav-clock { display: none; } }
 
@@ -466,19 +468,20 @@ a:hover { text-decoration: underline; }
 }
 .btn-secondary:hover { background: var(--bg-card-hov); border-color: var(--border-hov); color: var(--text-1); }
 
+
 /* How to use guide */
 .dm-guide { display: flex; flex-direction: column; gap: 0; }
 .dm-guide-row {
   display: flex; align-items: flex-start; gap: 14px;
-  padding: 8px 0;
+  padding: 7px 0;
 }
 .dm-guide-row + .dm-guide-row { border-top: 1px solid var(--border); }
 .dm-guide-num {
   font-family: var(--font-mono); font-size: 13px; font-weight: 700;
-  color: var(--amber); flex-shrink: 0; padding-top: 1px;
+  color: var(--amber); flex-shrink: 0; padding-top: 2px;
 }
 .dm-guide-text {
-  font-size: 14px; color: var(--text-3); line-height: 1.5;
+  font-size: 12px; color: var(--text-3); line-height: 1.4;
 }
 .dm-guide-text b { display: block; color: var(--text-1); font-weight: 700; font-size: 14px; margin-bottom: 1px; }
 
@@ -764,6 +767,17 @@ a:hover { text-decoration: underline; }
   .sb-stats { grid-template-columns: 1fr 1fr; }
   .inbox-header-left { gap: 8px; }
   .inbox-title { font-size: 13px; }
+  .dm-head-title { font-size: 1.4rem; }
+  .modal { max-height: 95vh; }
+  .nav-btn { padding: 4px 8px; font-size: 10px; }
+  .dm-shell { padding-bottom: 24px; }
+}
+
+@media (max-width: 360px) {
+  .navbar { padding: 0 10px; gap: 6px; }
+  .nav-title { display: none; }
+  .lang-toggle { display: none; }
+  .nav-btn-admin { padding: 5px 10px; }
 }
 
 /* ── VMAIL-inspired styles ───────────────────────────── */
