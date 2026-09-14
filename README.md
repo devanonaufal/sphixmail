@@ -53,9 +53,11 @@
 
 ### 📬 Instant Disposable Inbox
 - Create a temporary email address instantly — **no sign-up, no login required**
-- Custom username or randomly generated (European-style names)
+- Custom username or randomly generated (Indonesian-style names)
 - Multiple domains supported — user can pick at creation time
-- Emails auto-refresh every 10 seconds — no manual refresh needed
+- **Fast polling**: 2-second refresh for 30 seconds after inbox creation, then 3-second normal polling
+- **Auto-detect OTP**: extracts verification codes from plain text and HTML emails
+- **One-click OTP copy**: badge + copy button appears automatically when OTP detected
 - HTML emails rendered safely inside an isolated iframe
 - Last active inbox and selected domain persisted via `localStorage` across refreshes
 
@@ -63,6 +65,12 @@
 - Live clock (Asia/Jakarta / WIB) displayed in the navbar
 - All email timestamps shown as relative time with full WIB datetime on hover
 - UTC-aware timestamp parsing — no timezone drift from SQLite storage
+
+### 🎨 Appearance Customization
+- **Custom background**: upload image with adjustable transparency
+- **Mascot/decoration**: position a character or logo anywhere on the page (X/Y coordinates + size)
+- **Smart change detection**: "unsaved changes" warning only appears when settings actually differ from saved state
+- All appearance settings managed through Admin Panel — no code changes required
 
 ### 🌐 REST API for Developers
 Connect Sphixmail to bots, scripts, or automation tools using API Keys:
@@ -77,7 +85,7 @@ GET    /pub/inbox/[email]/wait-otp      → wait for OTP email (no key required)
 ```
 
 ### ⚡ Automatic OTP Extraction
-OTP codes are extracted automatically from incoming emails:
+OTP codes are extracted automatically from incoming emails (both plain text and HTML):
 
 ```bash
 curl "https://yourmail.com/pub/inbox/user@domain.com/wait-otp?timeout=30&subject_contains=OTP"
@@ -95,14 +103,18 @@ Manage everything through a secure web-based admin panel:
 - **Domains** — add/remove domains, set open or member-only access, toggle active state
 - **API Keys** — create, revoke, and manage keys with per-minute rate limits
 - **Settings** — configure all options without touching code
-- **Cron Logs** — monitor automated cleanup activity
+- **Appearance** — customize background, mascot, and visual theme
+- **Access Control** — whitelist/blacklist username phrases with admin bypass
 
 ### ⚙️ Zero-Code Configuration
 Everything configurable from the admin panel — no file edits or redeployment needed:
 
 | Setting | Description |
 |---|---|
-| Forbidden usernames | Block reserved words (admin, root, etc.) |
+| Forbidden usernames | Block reserved words (admin, root, etc.) — exact match |
+| Whitelist phrases | Require username to contain specific phrases (e.g., "test", "demo") |
+| Blacklist phrases | Block usernames containing specific phrases (e.g., "spam", "abuse") |
+| Admin bypass | Logged-in admin can create any username, bypassing all restrictions |
 | Username length | Min and max character limits |
 | Daily inbox limit | Max inboxes per session per day |
 | Auto-delete messages | Delete after X minutes/hours/days/weeks |

@@ -1,5 +1,9 @@
 /* ── Anti-inspect ───────────────────────────────────── */
 (function() {
+  // Skip in mascot edit mode (iframe preview)
+  const isMascotEdit = new URLSearchParams(location.search).get('mascotEdit') === '1';
+  if (isMascotEdit) return;
+  
   // Block right-click
   document.addEventListener('contextmenu', e => e.preventDefault());
   // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
@@ -199,6 +203,41 @@ async function ensureSession() {
 
 /* ── Config ─────────────────────────────────────────── */
 let activeDomains = [];
+/* ── Appearance ─────────────────────────────────────── */
+function applyBackground(config) {
+  const root = document.documentElement;
+  const hasCustomBg = !!(config.bgEnabled && config.bgImage);
+  root.classList.toggle('custom-bg', hasCustomBg);
+  if (hasCustomBg) {
+    root.style.setProperty('--bg-image-url', `url("${config.bgImage}")`);
+    const transparency = Math.min(100, Math.max(0, Number(config.bgTransparency) || 0));
+    root.style.setProperty('--card-alpha', String((100 - transparency) / 100));
+  } else {
+    root.style.removeProperty('--bg-image-url');
+    root.style.removeProperty('--card-alpha');
+  }
+}
+
+function applyMascot(cfg) {
+  const img = document.getElementById('mascotImg');
+  if (!img) return;
+  const enabled = !!cfg.mascotEnabled;
+  const src = typeof cfg.mascotImage === 'string' ? cfg.mascotImage : '';
+  const shouldShow = enabled && !!src;
+  if (shouldShow) {
+    if (img.src !== src) img.src = src;
+    img.style.left = `${Number.isFinite(cfg.mascotX) ? cfg.mascotX : parseFloat(cfg.mascotX) || 50}%`;
+    img.style.top = `${Number.isFinite(cfg.mascotY) ? cfg.mascotY : parseFloat(cfg.mascotY) || 50}%`;
+    const size = Number.isFinite(cfg.mascotSize) ? cfg.mascotSize : (parseFloat(cfg.mascotSize) || 110);
+    img.style.width = `${Math.min(400, Math.max(24, size))}px`;
+    img.style.display = 'block';
+  } else {
+    img.style.display = 'none';
+    img.removeAttribute('src');
+  }
+}
+
+/* ── Config ─────────────────────────────────────────── */
 async function loadConfig() {
   const config = await apiGet('/api/config');
   document.title = `${config.appName} — Disposable Temp Mail`;
@@ -215,6 +254,16 @@ async function loadConfig() {
   // Update active domains stat
   const domEl = document.getElementById('statDomains');
   if (domEl) domEl.textContent = activeDomains.length;
+
+  // Apply appearance settings
+  applyBackground(config);
+  applyMascot({
+    mascotEnabled: config.mascotEnabled,
+    mascotImage: config.mascotImage,
+    mascotX: config.mascotX,
+    mascotY: config.mascotY,
+    mascotSize: config.mascotSize,
+  });
 }
 
 /* ── Stats ─────────────────────────────────────────── */
@@ -287,6 +336,8 @@ async function createInbox(localPart) {
     inboxList = [inbox, ...inboxList.filter(i => i.address !== inbox.address)];
     setActiveInbox(inbox.address); // also calls renderInboxList + loadMessages
     toast(LANG[lang].created, 'success');
+    // Start fast polling for 30 seconds to quickly catch incoming emails
+    restartPoll(true);
   } catch (err) {
     toast(err.message || LANG[lang].errorCreate, 'error');
   }
@@ -318,9 +369,13 @@ async function loadMessages() {
   } catch { /* silent on poll failure */ }
 }
 
-function extractOTP(subject, body) {
+function extractOTP(subject, body, bodyHtml) {
   // match 4-8 digit standalone numbers
-  const text = (subject || '') + ' ' + (body || '');
+  let text = (subject || '') + ' ' + (body || '');
+  // If body empty but HTML exists, strip HTML tags
+  if (!body && bodyHtml) {
+    text = (subject || '') + ' ' + bodyHtml.replace(/<[^>]+>/g, ' ');
+  }
   const m = text.match(/\b(\d{4,8})\b/);
   return m ? m[1] : null;
 }
@@ -352,7 +407,7 @@ function renderMessages(msgs) {
   // Remove emptyState if still in DOM from static HTML or previous render
   document.getElementById('emptyState')?.remove();
   list.innerHTML = msgs.map(m => {
-    const otp = extractOTP(m.subject, m.body_text || m.body);
+    const otp = extractOTP(m.subject, m.body_text || m.body, m.body_html);
     const sender = m.from_address || '';
     const senderName = sender.split('@')[0] || sender;
     const initial = (senderName[0] || '?').toUpperCase();
@@ -415,9 +470,19 @@ function openMessage(msg) {
 }
 
 /* ── Polling ─────────────────────────────────────────── */
-function restartPoll() {
+let fastPollTimeout = null;
+
+function restartPoll(useFastPoll = false) {
   if (pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(() => { if (currentAddress) loadMessages(); }, 10000);
+  if (fastPollTimeout) clearTimeout(fastPollTimeout);
+  
+  const interval = useFastPoll ? 2000 : 3000;
+  pollTimer = setInterval(() => { if (currentAddress) loadMessages(); }, interval);
+  
+  // If fast poll, switch to normal after 30 seconds
+  if (useFastPoll) {
+    fastPollTimeout = setTimeout(() => restartPoll(false), 30000);
+  }
 }
 
 /* ── Mobile sidebar toggle ────────────────────────── */
@@ -448,12 +513,9 @@ function wireEvents() {
 
   document.getElementById('createBtn').addEventListener('click', async () => {
     const val = document.getElementById('usernameInput').value.trim();
-    const domain = document.getElementById('domainSelect').value;
     if (!val) { toast(LANG[lang].usernameRequired, 'error'); return; }
     await ensureSession();
-    const address = `${val}@${domain}`;
-    setActiveInbox(address);
-    toast(LANG[lang].created || 'Inbox opened', 'success');
+    await createInbox(val);
   });
 
   document.getElementById('randomBtn').addEventListener('click', () => {
@@ -518,6 +580,39 @@ function wireEvents() {
   document.getElementById('modalClose').addEventListener('click', () => overlay.classList.remove('open'));
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') overlay.classList.remove('open'); });
+}
+
+/* ── Mascot Edit Mode (iframe preview) ─────────────────── */
+const IS_MASCOT_EDIT = new URLSearchParams(location.search).get('mascotEdit') === '1';
+if (IS_MASCOT_EDIT) {
+  window.addEventListener('message', (e) => {
+    if (e.origin !== location.origin) return;
+    if (e.data.type === 'mascotUpdate') {
+      applyMascot({
+        mascotEnabled: true,
+        mascotImage: e.data.image,
+        mascotX: e.data.x,
+        mascotY: e.data.y,
+        mascotSize: e.data.size,
+      });
+      const img = document.getElementById('mascotImg');
+      if (img && img.style.display === 'block') {
+        img.classList.add('mascot-editable');
+        let isDragging = false;
+        img.addEventListener('mousedown', () => { isDragging = true; img.classList.add('mascot-dragging'); });
+        document.addEventListener('mousemove', (ev) => {
+          if (!isDragging) return;
+          const x = (ev.clientX / window.innerWidth) * 100;
+          const y = (ev.clientY / window.innerHeight) * 100;
+          img.style.left = `${x}%`;
+          img.style.top = `${y}%`;
+          window.parent.postMessage({ type: 'mascotPositionUpdate', x, y }, location.origin);
+        });
+        document.addEventListener('mouseup', () => { isDragging = false; img.classList.remove('mascot-dragging'); });
+      }
+    }
+  });
+  window.parent.postMessage({ type: 'mascotPreviewReady' }, location.origin);
 }
 
 /* ── Bootstrap ────────────────────────────────────── */

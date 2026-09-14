@@ -22,7 +22,6 @@ import {
   getTotalStat,
   countMessages,
   getStatsChart,
-  getCronLogs,
 } from '../db/queries';
 import { getAllSettings, getSetting, setSetting, importSettings } from '../utils/settings';
 import { hashPassword, verifyPassword } from '../utils/hash';
@@ -330,13 +329,11 @@ admin.post('/settings/import', requireAdmin, async (c) => {
   return c.json({ ok: true });
 });
 
-// ============================================================
-// CRON LOGS
-// ============================================================
-
-admin.get('/cron-logs', requireAdmin, async (c) => {
-  const logs = await getCronLogs(c.env.DB, 100);
-  return c.json(logs);
+// DEBUG: Temporary endpoint to check raw settings value
+admin.get('/debug/settings/:key', requireAdmin, async (c) => {
+  const key = c.req.param('key');
+  const row = await c.env.DB.prepare('SELECT * FROM settings WHERE key = ?').bind(key).first<{ key: string; value: string }>();
+  return c.json({ key, raw_value: row?.value ?? null, parsed: row ? JSON.parse(row.value) : null });
 });
 
 export default admin;

@@ -109,6 +109,39 @@ body {
 a { color: var(--amber); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+/* ── Custom Background (Admin Panel → Appearance) ─── */
+html.custom-bg[data-theme="dark"] body {
+  background:
+    linear-gradient(rgba(10,12,16,0.75), rgba(10,12,16,0.75)),
+    var(--bg-image-url);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+html.custom-bg:not([data-theme="dark"]) body {
+  background:
+    linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.3)),
+    var(--bg-image-url);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Card transparency when custom background is active */
+html.custom-bg .dm-panel,
+html.custom-bg .dm-main {
+  background-color: rgba(var(--bg-card-rgb), var(--card-alpha, 1));
+  backdrop-filter: blur(12px) saturate(150%);
+}
+html.custom-bg[data-theme="dark"] .dm-panel,
+html.custom-bg[data-theme="dark"] .dm-main {
+  background-color: rgba(20, 24, 30, var(--card-alpha, 1));
+}
+html.custom-bg[data-theme="dark"] .dm-main-head { background: rgba(18,22,28,0.55); }
+
+/* Starfield opacity adjustment */
+html.custom-bg[data-theme="dark"] #starfield { opacity: 0.35; }
+
 /* ── Starfield Canvas ───────────────────────────────── */
 #starfield {
   position: fixed;
@@ -303,6 +336,32 @@ a:hover { text-decoration: underline; }
   font-size: 0.68rem; color: var(--text-3); font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.06em;
   white-space: nowrap;
+}
+
+/* ── Mascot/Decoration Image ──────────────────────────── */
+.mascot-deco {
+  position: fixed;
+  display: none;
+  pointer-events: none;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+}
+.mascot-deco.mascot-editable {
+  pointer-events: auto;
+  cursor: move;
+  outline: 2px dashed var(--amber);
+  outline-offset: 4px;
+}
+.mascot-deco.mascot-dragging {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .mascot-deco { width: 76px; }
 }
 
 /* ── Two-column grid ──────────────────────── */

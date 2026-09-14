@@ -17,6 +17,7 @@ import {
 } from '../db/queries';
 import { generateUniqueAddress } from '../utils/random-address';
 import { getSetting } from '../utils/settings';
+import { hasAdminSession } from '../admin/middleware';
 
 export interface ApiEnv {
   DB: D1Database;
@@ -47,12 +48,30 @@ api.get('/config', async (c) => {
   const domains = await getActiveDomains(c.env.DB, 'open');
   const domainList = domains.map(d => d.domain);
   const appName = await getSetting<string>(c.env.DB, 'app_name') ?? c.env.APP_NAME ?? 'Sphixmail';
+  
+  // Appearance settings
+  const bgEnabled = !!(await getSetting<boolean>(c.env.DB, 'bg_enabled'));
+  const bgImage = await getSetting<string>(c.env.DB, 'bg_image') ?? '';
+  const bgTransparency = Number(await getSetting<number>(c.env.DB, 'bg_transparency') ?? 65);
+  const mascotEnabled = !!(await getSetting<boolean>(c.env.DB, 'mascot_enabled'));
+  const mascotImage = await getSetting<string>(c.env.DB, 'mascot_image') ?? '';
+  const mascotX = Number(await getSetting<number>(c.env.DB, 'mascot_x') ?? 50);
+  const mascotY = Number(await getSetting<number>(c.env.DB, 'mascot_y') ?? 50);
+  const mascotSize = Number(await getSetting<number>(c.env.DB, 'mascot_size') ?? 110);
 
   return c.json({
     appName,
     mailDomain: domainList[0] ?? '',
     mailDomains: domainList,
     webHost: c.env.WEB_HOST,
+    bgEnabled,
+    bgImage,
+    bgTransparency,
+    mascotEnabled,
+    mascotImage,
+    mascotX,
+    mascotY,
+    mascotSize,
   });
 });
 
@@ -80,6 +99,7 @@ api.post('/inboxes', async (c) => {
   await ensureSession(c.env.DB, sid);
 
   const body = await c.req.json().catch(() => ({}));
+  console.log('[DEBUG POST /inboxes] body:', JSON.stringify(body), 'session:', sid);
   const db = c.env.DB;
 
   // Sync domains
@@ -109,10 +129,34 @@ api.post('/inboxes', async (c) => {
   let address: string;
 
   if (requested) {
-    // Forbidden username check
-    const forbidden = await getSetting<string[]>(db, 'forbidden_usernames') ?? [];
-    if (forbidden.includes(requested)) {
-      return c.json({ error: 'Username not allowed' }, 406);
+    const isAdmin = await hasAdminSession(db, c.req.header('cookie'));
+    console.log('[DEBUG] isAdmin:', isAdmin, 'requested:', requested);
+    if (!isAdmin) {
+      const normalizePhrases = (value: unknown): string[] => {
+        if (!value) return [];
+        if (Array.isArray(value)) {
+          return value.filter((item): item is string => typeof item === 'string')
+            .map(item => item.trim().toLowerCase()).filter(Boolean);
+        }
+        return [];
+      };
+      const [forbidden, whitelist, blacklist] = await Promise.all([
+        getSetting<string[]>(db, 'forbidden_usernames'),
+        getSetting<string[]>(db, 'whitelist_phrases'),
+        getSetting<string[]>(db, 'blacklist_phrases'),
+      ]);
+      console.log('[DEBUG] forbidden:', forbidden, 'whitelist:', whitelist, 'blacklist:', blacklist);
+      const blocked = [...normalizePhrases(forbidden), ...normalizePhrases(blacklist)];
+      console.log('[DEBUG] blocked phrases:', blocked);
+      if (blocked.some(phrase => requested.includes(phrase))) {
+        console.log('[DEBUG] BLOCKED!');
+        return c.json({ error: 'Username not allowed' }, 406);
+      }
+      const allowed = normalizePhrases(whitelist);
+      if (allowed.length && !allowed.some(phrase => requested.includes(phrase))) {
+        console.log('[DEBUG] NOT IN WHITELIST!');
+        return c.json({ error: 'Username does not match an allowed phrase' }, 406);
+      }
     }
 
     // Length validation

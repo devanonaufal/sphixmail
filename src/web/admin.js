@@ -18,6 +18,13 @@
   addEventListener('resize',()=>{ resize(); make(120); });
 })();
 
+/* Appearance state */
+let bgImageData = '';
+let mascotImageData = '';
+let mascotX = 50;
+let mascotY = 50;
+let mascotSize = 110;
+
 /* Toast */
 function toast(msg, type='info'){
   const container=document.getElementById('toastContainer');
@@ -157,7 +164,7 @@ document.querySelectorAll('.admin-tab').forEach(tab=>{
     tab.classList.add('active');
     $('tab-'+tab.dataset.tab).classList.add('active');
     // dashboard is already loaded on showAdmin(); only lazy-load other tabs
-    const loaders={domains:loadDomains,apikeys:loadApiKeys,settings:loadSettings,cronlogs:loadCronLogs};
+    const loaders={domains:loadDomains,apikeys:loadApiKeys,settings:loadSettings};
     loaders[tab.dataset.tab]?.();
   });
 });
@@ -302,8 +309,9 @@ async function loadSettings(){
   const num = key => s[key]??'';
   $('s-app_name').value=str('app_name');
   $('s-footer_text').value=str('footer_text');
-  $('s-social_links').value=typeof s.social_links==='object'?JSON.stringify(s.social_links):str('social_links');
   $('s-forbidden_usernames').value=JSON.stringify(s.forbidden_usernames??[]);
+  $('s-whitelist_phrases').value=JSON.stringify(s.whitelist_phrases??[]);
+  $('s-blacklist_phrases').value=JSON.stringify(s.blacklist_phrases??[]);
   $('s-username_min').value=num('username_min');
   $('s-username_max').value=num('username_max');
   $('s-daily_inbox_limit').value=num('daily_inbox_limit');
@@ -312,36 +320,134 @@ async function loadSettings(){
   $('s-auto_delete_enabled').checked=!!s.auto_delete_enabled;
   $('s-delete_value').value=num('delete_value');
   $('s-delete_unit').value=str('delete_unit').replace(/"/g,'')||'d';
-  // Detect changes
+  
+  // Appearance settings
+  $('s-bg_enabled').checked=!!s.bg_enabled;
+  bgImageData = typeof s.bg_image==='string' ? s.bg_image : '';
+  if(bgImageData){ $('bgPreview').src=bgImageData; $('bgPreview').style.display='block'; }
+  else{ $('bgPreview').style.display='none'; }
+  const bgTrans = Number(s.bg_transparency ?? 65);
+  $('s-bg_transparency').value = bgTrans;
+  $('bgTransVal').textContent = bgTrans;
+  
+  $('s-mascot_enabled').checked=!!s.mascot_enabled;
+  mascotImageData = typeof s.mascot_image==='string' ? s.mascot_image : '';
+  mascotX = Number(s.mascot_x ?? 50);
+  mascotY = Number(s.mascot_y ?? 50);
+  mascotSize = Number(s.mascot_size ?? 110);
+  if(mascotImageData){ 
+    $('mascotPreview').src=mascotImageData; 
+    $('mascotPreview').style.display='block';
+    $('mascotEditBtn').style.display='inline-block';
+  } else{ 
+    $('mascotPreview').style.display='none';
+    $('mascotEditBtn').style.display='none';
+  }
+  $('s-mascot_size').value = mascotSize;
+  $('mascotSizeVal').textContent = mascotSize;
+  
+  // Smart change detection - track original state
   const hint=$('settingsChangedHint');
   if(hint) hint.style.display='none';
+  
+  const initialState = {
+    app_name: $('s-app_name').value,
+    footer_text: $('s-footer_text').value,
+    forbidden_usernames: $('s-forbidden_usernames').value,
+    whitelist_phrases: $('s-whitelist_phrases').value,
+    blacklist_phrases: $('s-blacklist_phrases').value,
+    username_min: $('s-username_min').value,
+    username_max: $('s-username_max').value,
+    daily_inbox_limit: $('s-daily_inbox_limit').value,
+    disable_used_email: $('s-disable_used_email').checked,
+    max_messages_per_inbox: $('s-max_messages_per_inbox').value,
+    auto_delete_enabled: $('s-auto_delete_enabled').checked,
+    delete_value: $('s-delete_value').value,
+    delete_unit: $('s-delete_unit').value,
+    bg_enabled: $('s-bg_enabled').checked,
+    bg_image: bgImageData,
+    bg_transparency: $('s-bg_transparency').value,
+    mascot_enabled: $('s-mascot_enabled').checked,
+    mascot_image: mascotImageData,
+    mascot_size: $('s-mascot_size').value,
+  };
+  
+  function checkChanges() {
+    const changed = 
+      $('s-app_name').value !== initialState.app_name ||
+      $('s-footer_text').value !== initialState.footer_text ||
+      $('s-forbidden_usernames').value !== initialState.forbidden_usernames ||
+      $('s-whitelist_phrases').value !== initialState.whitelist_phrases ||
+      $('s-blacklist_phrases').value !== initialState.blacklist_phrases ||
+      $('s-username_min').value !== initialState.username_min ||
+      $('s-username_max').value !== initialState.username_max ||
+      $('s-daily_inbox_limit').value !== initialState.daily_inbox_limit ||
+      $('s-disable_used_email').checked !== initialState.disable_used_email ||
+      $('s-max_messages_per_inbox').value !== initialState.max_messages_per_inbox ||
+      $('s-auto_delete_enabled').checked !== initialState.auto_delete_enabled ||
+      $('s-delete_value').value !== initialState.delete_value ||
+      $('s-delete_unit').value !== initialState.delete_unit ||
+      $('s-bg_enabled').checked !== initialState.bg_enabled ||
+      bgImageData !== initialState.bg_image ||
+      $('s-bg_transparency').value !== initialState.bg_transparency ||
+      $('s-mascot_enabled').checked !== initialState.mascot_enabled ||
+      mascotImageData !== initialState.mascot_image ||
+      $('s-mascot_size').value !== initialState.mascot_size;
+    
+    if(hint) hint.style.display = changed ? 'inline' : 'none';
+  }
+  
   document.querySelectorAll('#tab-settings input,#tab-settings select').forEach(el=>{
-    el.addEventListener('input',()=>{ if(hint) hint.style.display='inline'; },{once:false});
-    el.addEventListener('change',()=>{ if(hint) hint.style.display='inline'; },{once:false});
+    el.addEventListener('input', checkChanges);
+    el.addEventListener('change', checkChanges);
   });
+  
+  // Also check when appearance data changes
+  window.checkSettingsChanges = checkChanges;
 }
 
 $('saveSettingsBtn').addEventListener('click',async()=>{
   function tryJson(s){ try{ return JSON.parse(s); }catch{ return s; } }
-  const body={
-    app_name: $('s-app_name').value,
-    footer_text: $('s-footer_text').value,
-    social_links: tryJson($('s-social_links').value),
-    forbidden_usernames: tryJson($('s-forbidden_usernames').value),
-    username_min: parseInt($('s-username_min').value),
-    username_max: parseInt($('s-username_max').value),
-    daily_inbox_limit: parseInt($('s-daily_inbox_limit').value),
-    disable_used_email: $('s-disable_used_email').checked,
-    max_messages_per_inbox: parseInt($('s-max_messages_per_inbox').value),
-    auto_delete_enabled: $('s-auto_delete_enabled').checked,
-    delete_value: parseInt($('s-delete_value').value)||1,
-    delete_unit: $('s-delete_unit').value,
-  };
-  try{
+  function parseJsonArray(s, fieldName) {
+    if (!s.trim()) return [];
+    try {
+      const parsed = JSON.parse(s);
+      if (!Array.isArray(parsed)) throw new Error('Must be array');
+      return parsed;
+    } catch(e) {
+      toast(`${fieldName}: Invalid JSON format`, 'error');
+      throw e;
+    }
+  }
+  
+  try {
+    const body={
+      app_name: $('s-app_name').value,
+      footer_text: $('s-footer_text').value,
+      forbidden_usernames: parseJsonArray($('s-forbidden_usernames').value, 'Forbidden Usernames'),
+      whitelist_phrases: parseJsonArray($('s-whitelist_phrases').value, 'Whitelist Phrases'),
+      blacklist_phrases: parseJsonArray($('s-blacklist_phrases').value, 'Blacklist Phrases'),
+      username_min: parseInt($('s-username_min').value),
+      username_max: parseInt($('s-username_max').value),
+      daily_inbox_limit: parseInt($('s-daily_inbox_limit').value),
+      disable_used_email: $('s-disable_used_email').checked,
+      max_messages_per_inbox: parseInt($('s-max_messages_per_inbox').value),
+      auto_delete_enabled: $('s-auto_delete_enabled').checked,
+      delete_value: parseInt($('s-delete_value').value)||1,
+      delete_unit: $('s-delete_unit').value,
+      bg_enabled: $('s-bg_enabled').checked,
+      bg_image: bgImageData,
+      bg_transparency: parseInt($('s-bg_transparency').value),
+      mascot_enabled: $('s-mascot_enabled').checked,
+      mascot_image: mascotImageData,
+      mascot_x: mascotX,
+      mascot_y: mascotY,
+      mascot_size: mascotSize,
+    };
     await api('PATCH','/settings',body);
     toast('Pengaturan disimpan','success');
     const hint=$('settingsChangedHint'); if(hint) hint.style.display='none';
-  }catch(err){
+  } catch(err) {
     toast('Gagal simpan: '+err.message,'error');
   }
 });
@@ -374,13 +480,6 @@ $('importFile').addEventListener('change',async function(){
   this.value='';
 });
 
-/* ─── CRON LOGS ─────────────────────────────────────────── */
-async function loadCronLogs(){
-  const logs=await api('GET','/cron-logs').catch(()=>[]);
-  $('cronLogTable').innerHTML=(logs.length?logs:[{message:'Belum ada log.',created_at:new Date().toISOString()}]).map(l=>`<tr>
-    <td style="white-space:nowrap;color:var(--text-3)">${rel(l.created_at)}</td>
-    <td>${esc(l.message)}</td></tr>`).join('');
-}
 
 /* ─── Utils ─────────────────────────────────────────────── */
 function copyText(text){ navigator.clipboard.writeText(text).then(()=>toast('Disalin!','success')); }
@@ -393,4 +492,93 @@ document.getElementById('themeBtn')?.addEventListener('click',()=>{
   document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
   localStorage.setItem('theme',t);
 });
+
+/* ─── Appearance Event Handlers ──────────────────────────── */
+// Background image upload
+$('bgImageFile').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { toast('Image too large (max 2MB)', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    bgImageData = ev.target.result;
+    $('bgPreview').src = bgImageData;
+    $('bgPreview').style.display = 'block';
+    if(window.checkSettingsChanges) window.checkSettingsChanges();
+  };
+  reader.readAsDataURL(file);
+});
+
+$('bgImageClearBtn').addEventListener('click', () => {
+  bgImageData = '';
+  $('bgPreview').style.display = 'none';
+  $('bgImageFile').value = '';
+  if(window.checkSettingsChanges) window.checkSettingsChanges();
+});
+
+$('s-bg_transparency').addEventListener('input', (e) => {
+  $('bgTransVal').textContent = e.target.value;
+});
+
+// Mascot image upload
+$('mascotImageFile').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 1 * 1024 * 1024) { toast('Image too large (max 1MB)', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    mascotImageData = ev.target.result;
+    $('mascotPreview').src = mascotImageData;
+    $('mascotPreview').style.display = 'block';
+    $('mascotEditBtn').style.display = 'inline-block';
+    if(window.checkSettingsChanges) window.checkSettingsChanges();
+  };
+  reader.readAsDataURL(file);
+});
+
+$('mascotImageClearBtn').addEventListener('click', () => {
+  mascotImageData = '';
+  $('mascotPreview').style.display = 'none';
+  $('mascotEditBtn').style.display = 'none';
+  $('mascotImageFile').value = '';
+  $('mascotPreviewContainer').style.display = 'none';
+  if(window.checkSettingsChanges) window.checkSettingsChanges();
+});
+
+$('s-mascot_size').addEventListener('input', (e) => {
+  mascotSize = parseInt(e.target.value);
+  $('mascotSizeVal').textContent = mascotSize;
+});
+
+// Mascot position editor
+$('mascotEditBtn').addEventListener('click', () => {
+  const container = $('mascotPreviewContainer');
+  const frame = $('mascotPreviewFrame');
+  if (container.style.display === 'none') {
+    container.style.display = 'block';
+    const baseUrl = window.location.origin;
+    frame.src = `${baseUrl}/?mascotEdit=1`;
+    frame.onload = () => {
+      frame.contentWindow.postMessage({
+        type: 'mascotUpdate',
+        image: mascotImageData,
+        x: mascotX,
+        y: mascotY,
+        size: mascotSize
+      }, baseUrl);
+    };
+  } else {
+    container.style.display = 'none';
+  }
+});
+
+// Listen for mascot position updates from iframe
+window.addEventListener('message', (e) => {
+  if (e.origin !== window.location.origin) return;
+  if (e.data.type === 'mascotPositionUpdate') {
+    mascotX = e.data.x;
+    mascotY = e.data.y;
+  }
+});
+
 init();

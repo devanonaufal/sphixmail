@@ -14,16 +14,16 @@ export function getCookieToken(cookieHeader: string | null | undefined): string 
   return match ? match[1] : null;
 }
 
+export async function hasAdminSession(db: D1Database, cookieHeader: string | null | undefined): Promise<boolean> {
+  const token = getCookieToken(cookieHeader);
+  return !!token && !!(await getAdminSession(db, token));
+}
+
 /**
  * Middleware: require valid admin session cookie.
  * Returns 401 JSON if not authenticated.
  */
 export const requireAdmin: MiddlewareHandler<{ Bindings: AdminAuthEnv }> = async (c, next) => {
-  const token = getCookieToken(c.req.header('cookie'));
-  if (!token) return c.json({ error: 'Unauthorized' }, 401);
-
-  const session = await getAdminSession(c.env.DB, token);
-  if (!session) return c.json({ error: 'Unauthorized' }, 401);
-
+  if (!await hasAdminSession(c.env.DB, c.req.header('cookie'))) return c.json({ error: 'Unauthorized' }, 401);
   await next();
 };
