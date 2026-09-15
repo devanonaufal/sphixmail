@@ -556,6 +556,25 @@ function wireEvents() {
     createInbox(username);
   });
 
+  // Smart paste: if user pastes full email (user@domain.com), auto-split
+  document.getElementById('usernameInput').addEventListener('paste', e => {
+    const pasted = (e.clipboardData || window.clipboardData).getData('text').trim();
+    if (pasted.includes('@')) {
+      e.preventDefault();
+      const [local, ...domainParts] = pasted.split('@');
+      const pastedDomain = domainParts.join('@');
+      const select = document.getElementById('domainSelect');
+      const match = Array.from(select.options).find(o => o.value === pastedDomain);
+      if (!match) {
+        toast(`Domain @${pastedDomain} tidak tersedia`, 'error');
+        return;
+      }
+      const cleaned = local.replace(/[^a-z0-9]/gi, '').toLowerCase();
+      document.getElementById('usernameInput').value = cleaned;
+      select.value = pastedDomain;
+    }
+  });
+
   // Block non-alphanumeric in username input
   document.getElementById('usernameInput').addEventListener('input', e => {
     const cleaned = e.target.value.replace(/[^a-z0-9]/gi, '');

@@ -56,6 +56,7 @@
 - Custom username or randomly generated (Indonesian-style names)
 - Multiple domains supported — user can pick at creation time
 - **Fast polling**: 2-second refresh for 30 seconds after inbox creation, then 3-second normal polling
+- **Smart paste**: paste a full email address (`user@domain.com`) to auto-fill username and select domain
 - **Auto-detect OTP**: extracts verification codes from plain text and HTML emails
 - **One-click OTP copy**: badge + copy button appears automatically when OTP detected
 - HTML emails rendered safely inside an isolated iframe
@@ -444,7 +445,6 @@ Tables created automatically on first deploy:
 | `settings` | Admin-configurable settings |
 | `stats` | Daily usage statistics |
 | `inbox_logs` | Inbox creation history (rate limiting) |
-| `cron_logs` | Automated cleanup logs |
 
 ---
 
