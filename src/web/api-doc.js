@@ -1,3 +1,25 @@
+/* ── Anti-inspect ───────────────────────────────────── */
+(function() {
+  // Block right-click
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+  document.addEventListener('keydown', e => {
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.key.toUpperCase() === 'U') { e.preventDefault(); return false; }
+    if (e.metaKey && e.altKey && e.key.toUpperCase() === 'I') { e.preventDefault(); return false; }
+  });
+  // Detect devtools via window size threshold — blur content if opened
+  const threshold = 160;
+  function check() {
+    const devOpen = (window.outerWidth - window.innerWidth > threshold) ||
+                    (window.outerHeight - window.innerHeight > threshold);
+    document.body.style.filter = devOpen ? 'blur(8px)' : '';
+    document.body.style.userSelect = devOpen ? 'none' : '';
+  }
+  setInterval(check, 1000);
+})();
+
 /* Theme */
 (function(){
   const t=localStorage.getItem('theme')||'light';
@@ -48,53 +70,40 @@ function copyCode(blockId){
 }
 window.copyCode=copyCode;
 
+/* Test endpoint */
+async function testEndpoint(endpoint){
+  const key=document.getElementById('apiKeyInput').value.trim();
+  const base=document.getElementById('baseUrl').textContent||location.origin;
+  const outId=endpoint+'Out';
+  const out=document.getElementById(outId);
+  if(!out) return;
+  out.textContent='Loading...';
+  out.style.color='var(--text-3)';
+  try{
+    let url='';
+    if(endpoint==='domains') url=`${base}/pub/domains/${key}`;
+    else if(endpoint==='validate') url=`${base}/pub/email/test@sawith.net/${key}`;
+    else if(endpoint==='messages') url=`${base}/pub/messages/test@sawith.net/${key}?limit=3`;
+    else if(endpoint==='stats') url=`${base}/pub/stats/${key}?filters=total_messages,current_messages`;
+    const r=await fetch(url);
+    const json=await r.json();
+    out.textContent=JSON.stringify(json,null,2);
+    out.style.color=r.ok?'var(--green)':'var(--red)';
+  }catch(e){
+    out.textContent='Error: '+e.message;
+    out.style.color='var(--red)';
+  }
+}
+window.testEndpoint=testEndpoint;
+
 /* Toast */
 function toast(msg,type='info'){
+  const c=document.getElementById('toastContainer');
+  if(!c) return;
+  if([...c.children].some(x=>x.textContent===msg)) return;
   const el=document.createElement('div');
-  el.className=`toast ${type}`; el.textContent=msg;
-  document.getElementById('toastContainer').appendChild(el);
-  setTimeout(()=>{ el.classList.add('fadeout'); setTimeout(()=>el.remove(),250); },2500);
+  el.className=`toast ${type}`;
+  el.textContent=msg;
+  c.appendChild(el);
+  setTimeout(()=>{ el.classList.add('fadeout'); setTimeout(()=>el.remove(),250); },2800);
 }
-
-function getKey(){ return document.getElementById('apiKeyInput').value.trim(); }
-function showResult(id,data){ const el=document.getElementById(id); el.textContent=JSON.stringify(data,null,2); el.closest('.try-result').classList.add('show'); }
-
-async function tryIt(endpoint){
-  const key=getKey();
-  if(!key){ toast('Masukkan API Key terlebih dahulu','error'); return; }
-  try{
-    const r=await fetch(`/pub/${endpoint}/${key}`);
-    showResult(`try-${endpoint}-out`,await r.json());
-  }catch(e){ toast('Request gagal: '+e.message,'error'); }
-}
-window.tryIt=tryIt;
-
-async function tryItEmail(){
-  const key=getKey(); if(!key){ toast('Masukkan API Key terlebih dahulu','error'); return; }
-  const email=document.getElementById('try-email-input').value.trim();
-  if(!email){ document.getElementById('try-email').classList.add('show'); return; }
-  try{
-    const r=await fetch(`/pub/email/${encodeURIComponent(email)}/${key}`);
-    showResult('try-email-out',await r.json());
-  }catch(e){ toast('Request gagal: '+e.message,'error'); }
-}
-window.tryItEmail=tryItEmail;
-
-async function tryItMessages(){
-  const key=getKey(); if(!key){ toast('Masukkan API Key terlebih dahulu','error'); return; }
-  const email=document.getElementById('try-msg-input').value.trim();
-  if(!email){ document.getElementById('try-messages').classList.add('show'); return; }
-  try{
-    const r=await fetch(`/pub/messages/${encodeURIComponent(email)}/${key}`);
-    showResult('try-messages-out',await r.json());
-  }catch(e){ toast('Request gagal: '+e.message,'error'); }
-}
-window.tryItMessages=tryItMessages;
-
-/* Theme toggle */
-document.getElementById('themeBtn')?.addEventListener('click',()=>{
-  const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
-  document.documentElement.setAttribute('data-theme',t);
-  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
-  localStorage.setItem('theme',t);
-});

@@ -11,7 +11,9 @@
 
 **Sphixmail** is a fully self-hosted disposable email service built on Cloudflare Workers. No server, no VPS, no monthly cost. Deploy it to 275+ edge locations worldwide in minutes.
 
-*Built by [Devano Naufal](https://github.com/devanonaufal)*
+🌐 **[Live Demo: sawith.net](https://sawith.net)** | 📖 **[Documentation](https://sawith.net/docs.html)** | 🔌 **[API Reference](https://sawith.net/api-doc.html)**
+
+*Built with ❤️ by [Devano Naufal](https://github.com/devanonaufal)*
 
 </div>
 
@@ -20,15 +22,19 @@
 ## Table of Contents
 
 - [Why Sphixmail?](#why-sphixmail)
+- [Live Demo](#live-demo)
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Project Structure](#project-structure)
 - [Deployment Guide](#deployment-guide)
 - [Configuration](#configuration)
 - [Public REST API](#public-rest-api)
+- [Documentation](#documentation)
 - [Security](#security)
 - [Database Schema](#database-schema)
 - [Multi-Domain](#multi-domain)
 - [Maintenance](#maintenance)
+- [Contributing](#contributing)
 - [License](#license)
 
 ---
@@ -46,6 +52,41 @@
 | **OTP Auto-extract** | ✅ Automatic | ❌ Manual |
 | **Multi-domain** | ✅ Unlimited via Admin Panel | Limited |
 | **Open source** | ✅ MIT License | Varies |
+
+---
+
+## Live Demo
+
+Try Sphixmail instantly at **[sawith.net](https://sawith.net)**
+
+**Quick Start:**
+1. Visit [sawith.net](https://sawith.net)
+2. Click the arrow button to generate a random email address
+3. Copy the email and use it anywhere
+4. Return to see incoming messages in real-time
+
+**Full Documentation:** [docs.html](https://sawith.net/docs.html)  
+**API Reference:** [api-doc.html](https://sawith.net/api-doc.html) (interactive playground)
+
+---
+
+## Screenshots
+
+<div align="center">
+
+### 🌙 Dark Mode - Main Interface
+*Clean, modern UI with auto-refreshing inbox and OTP detection*
+
+### ☀️ Light Mode - Email Reading
+*HTML emails rendered safely in isolated iframe with syntax highlighting*
+
+### 🔧 Admin Panel - Dashboard
+*Real-time statistics with charts for 7 days, 6 weeks, 12 months, or 7 years*
+
+### 🎨 Appearance Customization
+*Custom backgrounds, mascot positioning, and transparency controls*
+
+</div>
 
 ---
 
@@ -415,6 +456,46 @@ curl "https://yourmail.com/pub/inbox/user%40mail.example.com/wait-otp?timeout=30
 
 ---
 
+## Documentation
+
+### 📚 Complete User Guide
+
+Visit **[sawith.net/docs.html](https://sawith.net/docs.html)** for comprehensive documentation including:
+
+- **Getting Started**: Creating your first inbox
+- **Email Management**: Receiving, reading, and organizing messages
+- **OTP Auto-detection**: Automatic verification code extraction
+- **API Integration**: Complete REST API reference with examples
+- **FAQ**: Common questions and troubleshooting
+
+### 🔌 Interactive API Documentation
+
+Visit **[sawith.net/api-doc.html](https://sawith.net/api-doc.html)** for:
+
+- **Live API Playground**: Test endpoints directly in your browser
+- **Request/Response Examples**: Copy-paste ready code snippets
+- **Authentication Guide**: API key setup and usage
+- **Rate Limiting Info**: Understand usage quotas
+- **Long-polling Guide**: OTP wait endpoint usage
+
+### 📖 Available in Multiple Languages
+
+All documentation is available in:
+- 🇺🇸 **English**
+- 🇮🇩 **Bahasa Indonesia**
+
+Toggle language in the top-right corner of any page.
+
+### 🎓 Quick Links
+
+- [How to create a custom username](https://sawith.net/docs.html#create)
+- [Understanding OTP auto-extraction](https://sawith.net/docs.html#otp)
+- [Using the wait-otp endpoint](https://sawith.net/docs.html#api-wait)
+- [Setting up API keys](https://sawith.net/admin.html)
+- [Multi-domain configuration](https://sawith.net/docs.html#api-domains)
+
+---
+
 ## Security
 
 - **Admin login**: HttpOnly + SameSite cookie, expires after 24 hours
@@ -486,26 +567,108 @@ Every hour, Cloudflare runs automated maintenance:
 
 ## Contributing
 
-Pull requests, bug reports, and feature ideas are welcome.
+Contributions are welcome! Whether it's bug reports, feature requests, or code improvements, your help makes Sphixmail better for everyone.
+
+### 🐛 Found a Bug?
+
+1. Check [existing issues](https://github.com/devanonaufal/sphixmail/issues) to avoid duplicates
+2. Open a new issue with:
+   - Clear description of the problem
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Your environment (browser, OS, Cloudflare region if relevant)
+
+### 💡 Have a Feature Request?
+
+1. Open an issue with the `enhancement` label
+2. Describe the feature and its use case
+3. Explain why it would benefit other users
+
+### 🔧 Want to Contribute Code?
 
 1. Fork this repository
-2. Create a branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m "feat: add your feature"`
-4. Push: `git push origin feature/your-feature`
-5. Open a Pull Request
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes following the existing code style
+4. Test thoroughly (both frontend and backend if applicable)
+5. Commit with clear messages: `git commit -m "feat: add your feature"`
+6. Push to your fork: `git push origin feature/your-feature`
+7. Open a Pull Request with:
+   - Clear description of changes
+   - Screenshots/demos for UI changes
+   - Any breaking changes highlighted
+
+### 📋 Development Setup
+
+```bash
+# Clone your fork
+git clone https://github.com/YOUR-USERNAME/sphixmail.git
+cd sphixmail
+
+# Install dependencies
+npm install
+
+# Run local development
+npm run dev
+
+# Test database migrations
+npm run db:local
+```
+
+### 🎨 Code Style
+
+- **TypeScript**: Follow existing patterns in `src/`
+- **Frontend**: Vanilla JS (no frameworks), semantic HTML, CSS custom properties
+- **Comments**: Add `ponytail:` comments for deliberate simplifications with upgrade paths
+- **Commits**: Use conventional commit format (`feat:`, `fix:`, `docs:`, `refactor:`)
 
 ---
 
 ## License
 
-MIT License — free to use, modify, and distribute.
+**MIT License** — Free to use, modify, and distribute.
+
+Copyright (c) 2026 Devano Naufal
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
+
+## Acknowledgments
+
+**Sphixmail** is built with:
+- [Cloudflare Workers](https://workers.cloudflare.com/) - Serverless edge computing
+- [Cloudflare D1](https://developers.cloudflare.com/d1/) - Distributed SQLite database
+- [Hono](https://hono.dev/) - Lightweight web framework
+- [Postal-MIME](https://github.com/postalsys/postal-mime) - Fast email parser
+
+Special thanks to the open-source community for these amazing tools.
 
 ---
 
 <div align="center">
 
-Built with ❤️ by **[Devano Naufal](https://github.com/devanonaufal)**
+## 🌟 Support This Project
 
-*If this project helps you, consider leaving a ⭐ on GitHub!*
+If Sphixmail helps you, consider:
+
+⭐ **[Star this repository](https://github.com/devanonaufal/sphixmail)** on GitHub
+
+🐛 **[Report issues](https://github.com/devanonaufal/sphixmail/issues)** to help improve it
+
+🔀 **[Contribute code](https://github.com/devanonaufal/sphixmail/pulls)** to add features
+
+---
+
+**Built with ❤️ by [Devano Naufal](https://github.com/devanonaufal)**
+
+🌐 [Live Demo](https://sawith.net) • 📖 [Documentation](https://sawith.net/docs.html) • 🔌 [API Reference](https://sawith.net/api-doc.html)
+
+---
+
+*Sphixmail - Free, Fast, and Privacy-Focused Temporary Email*
 
 </div>

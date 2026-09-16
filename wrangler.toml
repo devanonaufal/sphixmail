@@ -1,6 +1,6 @@
 name = "sphixmail"
 main = "src/index.ts"
-compatibility_date = "2025-06-01"
+compatibility_date = "2026-06-01"
 
 # Set workers_dev to false when using a custom domain
 workers_dev = false

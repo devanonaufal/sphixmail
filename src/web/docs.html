@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docs — Sphixmail</title>
+  <meta name="description" content="Complete guide for using Sphixmail — from creating inboxes to API automation. Learn how to receive OTP codes and use the REST API." />
+  <meta name="keywords" content="sphixmail docs, temp mail guide, disposable email api, otp automation" />
+  <meta property="og:title" content="Sphixmail Documentation — Complete User Guide" />
+  <meta property="og:description" content="Learn how to use Sphixmail: create inboxes, receive emails, extract OTP codes, and automate with the REST API." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script>if((localStorage.getItem('theme')||'dark')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    .docs-container { display: flex; max-width: 1440px; margin: 80px auto 0; gap: 3rem; padding: 2rem; position: relative; }
+    .docs-sidebar { width: 260px; position: sticky; top: 100px; height: fit-content; max-height: calc(100vh - 120px); overflow-y: auto; }
+    .docs-sidebar::-webkit-scrollbar { width: 4px; }
+    .docs-sidebar::-webkit-scrollbar-track { background: transparent; }
+    .docs-sidebar::-webkit-scrollbar-thumb { background: var(--border-hov); border-radius: 4px; }
+    .docs-nav { display: flex; flex-direction: column; gap: 0.25rem; }
+    .docs-nav-link { display: block; padding: 0.5rem 1rem; color: var(--text-2); font-size: 0.925rem; border-radius: var(--radius-sm); transition: all var(--transition); text-decoration: none; }
+    .docs-nav-link:hover { background: var(--bg-card-hov); color: var(--text-1); text-decoration: none; }
+    .docs-nav-link.active { background: var(--amber-soft); color: var(--amber); font-weight: 600; }
+    .docs-nav-link.indent { padding-left: 2rem; font-size: 0.875rem; }
+    .docs-content { flex: 1; max-width: 860px; }
+    .docs-hero { margin-bottom: 3rem; }
+    .docs-hero h1 { font-family: var(--font-display); font-size: 3rem; font-weight: 800; color: var(--text-1); margin-bottom: 0.75rem; }
+    .docs-hero p { font-size: 1.125rem; color: var(--text-2); }
+    .docs-breadcrumb { display: inline-block; font-size: 0.875rem; color: var(--text-3); background: var(--amber-soft); padding: 0.375rem 0.875rem; border-radius: 6px; margin-bottom: 1rem; }
+    .docs-section { margin-bottom: 4rem; scroll-margin-top: 100px; }
+    .docs-section h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text-1); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .docs-section h3 { font-size: 1.5rem; font-weight: 600; color: var(--text-1); margin: 2rem 0 1rem; }
+    .docs-section p { line-height: 1.75; color: var(--text-2); margin-bottom: 1rem; }
+    .docs-section ul, .docs-section ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+    .docs-section li { line-height: 1.75; color: var(--text-2); margin-bottom: 0.5rem; }
+    .docs-section code { background: var(--bg-card); border: 1px solid var(--border); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.875rem; color: var(--amber); }
+    .docs-section pre { background: var(--bg-card); border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius); overflow-x: auto; margin-bottom: 1rem; }
+    .docs-section pre code { background: none; border: none; padding: 0; display: block; color: var(--text-1); }
+    .docs-note { background: var(--cyan-glow); border-left: 4px solid var(--cyan); padding: 1rem; border-radius: var(--radius-sm); margin: 1.5rem 0; font-size: 0.925rem; color: var(--text-2); }
+    .docs-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    .docs-table th, .docs-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .docs-table th { background: var(--bg-card); font-weight: 600; color: var(--text-1); }
+    .docs-table td { color: var(--text-2); }
+    .docs-endpoint { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin: 1.5rem 0; }
+    .docs-endpoint-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .docs-endpoint-method { display: inline-block; padding: 0.25rem 0.75rem; background: var(--green-bg); color: var(--green); border-radius: 6px; font-family: var(--font-mono); font-size: 0.875rem; font-weight: 600; }
+    .docs-endpoint-method.delete { background: var(--red-bg); color: var(--red); }
+    .docs-endpoint-url { font-family: var(--font-mono); font-size: 0.925rem; color: var(--text-1); }
+    /* Nav clock styling (BUG FIX #1) */
+    .nav-clock { position: absolute; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--text-3); letter-spacing: 0.03em; white-space: nowrap; pointer-events: none; }
+    @media (max-width: 968px) {
+      .docs-container { flex-direction: column; padding: 1rem; margin-top: 70px; gap: 2rem; }
+      .docs-sidebar { position: relative; top: 0; width: 100%; max-height: none; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+      .docs-hero h1 { font-size: 2rem; }
+      .nav-clock { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/">
+      <div class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+          <rect x="4" y="18" width="56" height="38" rx="5" fill="#F5C842"/>
+          <path d="M4 23 L32 8 L60 23" fill="#D4A917" opacity="0.8"/>
+          <rect x="16" y="4" width="32" height="32" rx="5" fill="#FF6B7A"/>
+          <ellipse cx="32" cy="21" rx="10" ry="9" fill="#F5E6C8"/>
+          <ellipse cx="28" cy="20" rx="2.5" ry="2.5" fill="#5C4A3A"/>
+          <ellipse cx="36" cy="20" rx="2.5" ry="2.5" fill="#5C4A3A"/>
+          <path d="M31 24 L32 26 L33 24 Z" fill="#5C4A3A"/>
+          <rect x="26" y="27" width="12" height="5" rx="2" fill="#F5E6C8"/>
+          <rect x="28.5" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+          <rect x="32" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+          <rect x="35.5" y="27" width="2" height="5" fill="#FF6B7A" opacity="0.6"/>
+          <line x1="14" y1="50" x2="50" y2="50" stroke="#B8961A" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="nav-title" id="navTitle">Sphixmail</span>
+    </a>
+    <span class="nav-clock" id="navClock"></span>
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
+    <div class="nav-actions">
+      <div class="lang-toggle" id="langToggle">
+        <button class="lang-opt active" id="langEn" data-lang="en">EN</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-opt" id="langId" data-lang="id">ID</button>
+      </div>
+      <button class="nav-lang" id="themeBtn" title="Toggle theme">🌙</button>
+      <a href="/" class="nav-btn">Home</a>
+      <a href="/docs.html" class="nav-btn" style="font-weight:700;color:var(--amber)">Docs</a>
+      <a href="/api-doc.html" class="nav-btn">API</a>
+      <a href="/admin.html" class="nav-btn nav-btn-admin">Admin</a>
+    </div>
+  </nav>
+
+  <div class="docs-container">
+    <!-- Sidebar Navigation -->
+    <aside class="docs-sidebar">
+      <nav class="docs-nav" id="docsNav">
+        <a href="#intro" class="docs-nav-link" data-i18n="nav_intro">What is Sphixmail?</a>
+        <a href="#create" class="docs-nav-link" data-i18n="nav_create">Creating an Inbox</a>
+        <a href="#receive" class="docs-nav-link" data-i18n="nav_receive">Receiving Emails</a>
+        <a href="#read" class="docs-nav-link" data-i18n="nav_read">Reading Emails</a>
+        <a href="#otp" class="docs-nav-link" data-i18n="nav_otp">Auto-detect OTP</a>
+        <a href="#delete" class="docs-nav-link" data-i18n="nav_delete">Deleting Inbox</a>
+        <a href="#api" class="docs-nav-link" data-i18n="nav_api">Using the API</a>
+        <a href="#api-domains" class="docs-nav-link indent" data-i18n="nav_api_domains">List Domains</a>
+        <a href="#api-validate" class="docs-nav-link indent" data-i18n="nav_api_validate">Validate Email</a>
+        <a href="#api-messages" class="docs-nav-link indent" data-i18n="nav_api_messages">Fetch Messages</a>
+        <a href="#api-delete" class="docs-nav-link indent" data-i18n="nav_api_delete">Delete Message</a>
+        <a href="#api-stats" class="docs-nav-link indent" data-i18n="nav_api_stats">Statistics</a>
+        <a href="#api-wait" class="docs-nav-link indent" data-i18n="nav_api_wait">Wait for OTP</a>
+        <a href="#faq" class="docs-nav-link" data-i18n="nav_faq">FAQ</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+      <div class="docs-hero">
+        <div class="docs-breadcrumb" data-i18n="breadcrumb">Documentation</div>
+        <h1 data-i18n="hero_title">How to Use Sphixmail</h1>
+        <p data-i18n="hero_subtitle">Free temporary email for OTP verification and spam-free signups — no registration required.</p>
+      </div>
+
+      <!-- Section 1: What is Sphixmail? -->
+      <section class="docs-section" id="intro">
+        <h2 data-i18n="intro_title">What is Sphixmail?</h2>
+        <p data-i18n="intro_p1">Sphixmail is a disposable temporary email service that lets you receive emails without creating an account. Perfect for:</p>
+        <ul>
+          <li data-i18n="intro_li1">Signing up for websites without revealing your real email</li>
+          <li data-i18n="intro_li2">Receiving OTP verification codes instantly</li>
+          <li data-i18n="intro_li3">Avoiding spam and unwanted newsletters</li>
+          <li data-i18n="intro_li4">Testing email functionality in your applications</li>
+        </ul>
+        <p data-i18n="intro_p2"><strong>Fast, private, and completely free.</strong> Emails arrive in seconds and are accessible via both web UI and REST API.</p>
+      </section>
+
+      <!-- Section 2: Creating an Inbox -->
+      <section class="docs-section" id="create">
+        <h2 data-i18n="create_title">Creating an Inbox</h2>
+        <p data-i18n="create_intro">Follow these steps to create your temporary inbox:</p>
+        <ol>
+          <li data-i18n="create_step1">Open <code>sawith.net</code> in your browser</li>
+          <li data-i18n="create_step2">Choose one of these options:
+            <ul style="margin-top:0.5rem">
+              <li><strong>Custom username:</strong> Enter your preferred username in the input field</li>
+              <li><strong>Random address:</strong> Click the "Random address" button below the input for an auto-generated Indonesian-style name</li>
+            </ul>
+          </li>
+          <li data-i18n="create_step3">Select a domain from the dropdown (if multiple domains are available)</li>
+          <li data-i18n="create_step4">If you entered a custom username, click the <strong>arrow button (→)</strong> on the right side of the input field</li>
+          <li data-i18n="create_step5">Your email address is now ready to use!</li>
+        </ol>
+        <div class="docs-note" data-i18n="create_note">
+          <strong>Note:</strong> Usernames must be alphanumeric (letters and numbers only), with a minimum of 3 characters. Some reserved words like "admin" and "root" are not allowed.
+        </div>
+        <h3 data-i18n="create_ui_title">Understanding the Interface</h3>
+        <p data-i18n="create_ui_desc">The inbox creation uses a minimal, streamlined design:</p>
+        <ul>
+          <li data-i18n="create_ui_input"><strong>Input field:</strong> Enter your custom username here</li>
+          <li data-i18n="create_ui_arrow"><strong>Arrow button (→):</strong> Located on the right side of input — click to create inbox with your custom username</li>
+          <li data-i18n="create_ui_random"><strong>Random address button:</strong> Instantly generates a random Indonesian-style email address without typing</li>
+          <li data-i18n="create_ui_domain"><strong>Domain dropdown:</strong> Select which domain to use for your email address</li>
+        </ul>
+        <h3 data-i18n="create_smart_title">Smart Paste Feature</h3>
+        <p data-i18n="create_smart_p">If you paste a full email address (e.g., <code>user@domain.com</code>), the username and domain fields will automatically fill.</p>
+      </section>
+
+      <!-- Section 3: Receiving Emails -->
+      <section class="docs-section" id="receive">
+        <h2 data-i18n="receive_title">Receiving Emails</h2>
+        <p data-i18n="receive_p1">Once your inbox is created, it automatically checks for new messages every few seconds. You don't need to refresh manually.</p>
+        <p data-i18n="receive_p2">New emails appear in the inbox list with:</p>
+        <ul>
+          <li data-i18n="receive_li1">Sender's email address</li>
+          <li data-i18n="receive_li2">Subject line</li>
+          <li data-i18n="receive_li3">Relative timestamp (e.g., "2 minutes ago")</li>
+        </ul>
+      </section>
+
+      <!-- Section 4: Reading Emails -->
+      <section class="docs-section" id="read">
+        <h2 data-i18n="read_title">Reading Emails</h2>
+        <p data-i18n="read_p1">Click any email in the list to view its contents. HTML emails are rendered safely in an isolated iframe to prevent malicious scripts.</p>
+        <p data-i18n="read_p2">Timestamps are displayed in WIB timezone (Asia/Jakarta). Hover over relative time (e.g., "5 mins ago") to see the exact datetime.</p>
+      </section>
+
+      <!-- Section 5: Auto-detect OTP -->
+      <section class="docs-section" id="otp">
+        <h2 data-i18n="otp_title">Auto-detect OTP Codes</h2>
+        <p data-i18n="otp_p1">Sphixmail automatically detects verification codes in emails. When an email contains a 4-8 digit OTP, a badge appears with a one-click copy button.</p>
+        <p data-i18n="otp_p2">This works for both plain text and HTML emails. Simply click the OTP badge to copy the code to your clipboard.</p>
+      </section>
+
+      <!-- Section 6: Deleting Inbox -->
+      <section class="docs-section" id="delete">
+        <h2 data-i18n="delete_title">Deleting an Inbox</h2>
+        <p data-i18n="delete_p1">To remove an inbox from your session, click the delete icon next to the inbox address. This removes it from your view, but the address remains public.</p>
+        <div class="docs-note" data-i18n="delete_note">
+          <strong>Important:</strong> Inboxes are public by design. Anyone who knows the email address can view its messages. Only use Sphixmail for non-sensitive information like OTP codes and website verifications.
+        </div>
+      </section>
+
+      <!-- Section 7: Using the API -->
+      <section class="docs-section" id="api">
+        <h2 data-i18n="api_title">Using the API</h2>
+        <p data-i18n="api_intro">Sphixmail provides a REST API for automation, bots, and testing workflows. You'll need an API key to access most endpoints. Contact the admin to request one.</p>
+        <p data-i18n="api_base"><strong>Base URL:</strong> <code>https://sawith.net/pub/</code></p>
+        <p data-i18n="api_ref">For interactive documentation with live testing, visit <a href="/api-doc.html">API Reference</a>.</p>
+
+        <!-- API: List Domains -->
+        <h3 id="api-domains" data-i18n="api_domains_title">List Active Domains</h3>
+        <div class="docs-endpoint">
+          <div class="docs-endpoint-header">
+            <span class="docs-endpoint-method">GET</span>
+            <span class="docs-endpoint-url">/pub/domains/[apikey]</span>
+          </div>
+          <p data-i18n="api_domains_desc">Returns all active email domains available for inbox creation.</p>
+          <pre><code>curl https://sawith.net/pub/domains/YOUR_API_KEY</code></pre>
+          <p><strong data-i18n="response">Response:</strong></p>
+          <pre><code>{
+  "success": true,
+  "count": 1,
+  "domains": [
+    { "domain": "sawith.net", "type": "open", "added_at": "2026-01-01T00:00:00Z" }
+  ]
+}</code></pre>
+        </div>
+
+        <!-- API: Validate Email -->
+        <h3 id="api-validate" data-i18n="api_validate_title">Validate Email Address</h3>
+        <div class="docs-endpoint">
+          <div class="docs-endpoint-header">
+            <span class="docs-endpoint-method">GET</span>
+            <span class="docs-endpoint-url">/pub/email/[email]/[apikey]</span>
+          </div>
+          <p data-i18n="api_validate_desc">Checks if an email address is valid and follows username restrictions.</p>
+          <pre><code>curl https://sawith.net/pub/email/user@sawith.net/YOUR_API_KEY</code></pre>
+          <p><strong data-i18n="response">Response:</strong></p>
+          <pre><code>{
+  "success": true,
+  "email": "user@sawith.net",
+  "local": "user",
+  "domain": "sawith.net",
+  "message": "Email is valid and ready to use"
+}</code></pre>
+        </div>
+
+        <!-- API: Fetch Messages -->
+        <h3 id="api-messages" data-i18n="api_messages_title">Fetch Messages</h3>
+        <div class="docs-endpoint">
+          <div class="docs-endpoint-header">
+            <span class="docs-endpoint-method">GET</span>
+            <span class="docs-endpoint-url">/pub/messages/[email]/[apikey]</span>
+          </div>
+          <p data-i18n="api_messages_desc">Retrieves all messages for a specific inbox. Add <code>?limit=5</code> to limit results.</p>
+          <pre><code>curl https://sawith.net/pub/messages/user@sawith.net/YOUR_API_KEY</code></pre>
+          <p><strong data-i18n="response">Response:</strong></p>
+          <pre><code>{
+  "success": true,
+  "email": "user@sawith.net",
+  "count": 2,
+  "messages": [
+    {
+      "id": "msg_123",
+      "from": "noreply@example.com",
+      "subject": "Verify your account",
+      "preview": "Your verification code is 123456",
+      "body_text": "Your verification code is 123456",
+      "body_html": "&lt;p&gt;Your verification code is 123456&lt;/p&gt;",
+      "received_at": "2026-09-16T12:30:00Z"
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <!-- API: Delete Message -->
+        <h3 id="api-delete" data-i18n="api_delete_title">Delete a Message</h3>
+        <div class="docs-endpoint">
+          <div class="docs-endpoint-header">
+            <span class="docs-endpoint-method delete">DELETE</span>
+            <span class="docs-endpoint-url">/pub/message/[message_id]/[apikey]</span>
+          </div>
+          <p data-i18n="api_delete_desc">Permanently deletes a specific message by its ID.</p>
+          <pre><code>curl -X DELETE https://sawith.net/pub/message/msg_123/YOUR_API_KEY</code></pre>
+          <p><strong data-i18n="response">Response:</strong></p>
+          <pre><code>{
+  "success": true,
+  "message": "Message deleted successfully",
+  "deleted_id": "msg_123"
+}</code></pre>
+        </div>
+
+        <!-- API: Statistics -->
+        <h3 id="api-stats" data-i18n="api_stats_title">Get Statistics</h3>
+        <div class="docs-endpoint">
+          <div class="docs-endpoint-header">
+            <span class="docs-endpoint-method">GET</span>
+            <span class="docs-endpoint-url">/pub/stats/[apikey]</span>
+          </div>
+          <p data-i18n="api_stats_desc">Returns usage statistics. Use <code>?filters=total_messages,unread_messages</code> to filter specific metrics.</p>
+          <pre><code>curl https://sawith.net/pub/stats/YOUR_API_KEY</code></pre>
+          <p><strong data-i18n="response">Response:</strong></p>
+          <pre><code>{
+  "success": true,
+  "data": {
+    "total_messages": 1234,
+    "current_messages": 87,
+    "total_inboxes_created": 567,
+    "unread_messages": 12,
+    "unread_messages_percentage": "14%"
+  }
+}</code></pre>
+        </div>
+
+        <!-- API: Wait for OTP -->
+        <h3 id="api-wait" data-i18n="api_wait_title">Wait for OTP (Long-Polling)</h3>
+        <div class="docs-endpoint">
+          <div class="docs-endpoint-header">
+            <span class="docs-endpoint-method">GET</span>
+            <span class="docs-endpoint-url">/pub/inbox/[email]/wait-otp</span>
+          </div>
+          <p data-i18n="api_wait_desc">Waits for an OTP email to arrive (no API key required). Ideal for automation scripts and bots.</p>
+          <p><strong data-i18n="parameters">Parameters:</strong></p>
+          <ul>
+            <li><code>timeout</code> — max wait time in seconds (default: 30, max: 60)</li>
+            <li><code>subject_contains</code> — filter by keyword in subject</li>
+            <li><code>after</code> — only return emails after this message ID</li>
+          </ul>
+          <pre><code>curl "https://sawith.net/pub/inbox/user@sawith.net/wait-otp?timeout=30&subject_contains=OTP"</code></pre>
+          <p><strong data-i18n="response">Response:</strong></p>
+          <pre><code>{
+  "found": true,
+  "message": {
+    "id": "msg_456",
+    "from": "noreply@service.com",
+    "subject": "Your OTP Code",
+    "body_text": "Your code is 654321",
+    "received_at": "2026-09-16T12:35:00Z"
+  },
+  "otp": "654321"
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- Section 8: FAQ -->
+      <section class="docs-section" id="faq">
+        <h2 data-i18n="faq_title">Frequently Asked Questions</h2>
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th data-i18n="faq_q">Question</th>
+              <th data-i18n="faq_a">Answer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="faq_q1">Are emails stored forever?</td>
+              <td data-i18n="faq_a1">No. The admin can enable auto-delete to remove old messages automatically.</td>
+            </tr>
+            <tr>
+              <td data-i18n="faq_q2">Can others read my inbox?</td>
+              <td data-i18n="faq_a2">Yes, if they know the email address. Only use for OTP codes and temporary verifications.</td>
+            </tr>
+            <tr>
+              <td data-i18n="faq_q3">How many inboxes can I create?</td>
+              <td data-i18n="faq_a3">Limited per session per day (default: 10). This prevents abuse.</td>
+            </tr>
+            <tr>
+              <td data-i18n="faq_q4">Is there a login system?</td>
+              <td data-i18n="faq_a4">No. Inboxes are tied to your browser session. Clearing cookies removes access.</td>
+            </tr>
+            <tr>
+              <td data-i18n="faq_q5">Is there a mobile app?</td>
+              <td data-i18n="faq_a5">Not yet, but the website is mobile-friendly and works on all devices.</td>
+            </tr>
+            <tr>
+              <td data-i18n="faq_q6">Why isn't my email arriving?</td>
+              <td data-i18n="faq_a6">Ensure the domain matches. Wait a few seconds — emails typically arrive within 2-5 seconds.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/docs.js"></script>
+</body>
+</html>
