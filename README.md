@@ -9,190 +9,157 @@
 
 ### The Modern Disposable Email Service — Privacy-First, Lightning-Fast, Zero Cost
 
-**Sphixmail** is a fully self-hosted temporary email solution that runs on Cloudflare's global edge network. Get instant, disposable email addresses for testing, verification, and privacy protection—without servers, maintenance, or monthly bills.
+Sphixmail is a fully self-hosted, temporary email solution that runs on Cloudflare's global edge network. Get instant, disposable email addresses for testing, verification, and privacy protection — without servers, maintenance, or monthly bills.
 
 **Deploy once. Run forever. Completely free.**
 
-🌐 **[Live Demo: sawith.net](https://sawith.net)** | 📖 **[Documentation](https://sawith.net/docs.html)** | 🔌 **[API Reference](https://sawith.net/api-doc.html)** | ⭐ **[Star on GitHub](https://github.com/devanonaufal/sphixmail)**
+[**Live Demo**](https://sawith.net) · [**Documentation**](https://sawith.net/docs.html) · [**API Reference**](https://sawith.net/api-doc.html) · [**GitHub**](https://github.com/devanonaufal/sphixmail)
 
 </div>
-
----
-
-## 🚀 Why Sphixmail?
-
-### Built for Privacy, Speed, and Zero Maintenance
-
-**Tired of traditional temp mail services that:**
-- 🚫 Track your data and sell it to advertisers
-- 🐌 Load slowly with annoying ads everywhere
-- 💰 Charge monthly fees for basic features
-- 🔒 Lock you into their platform
-
-**Sphixmail gives you complete control:**
-- ✅ **100% Free Forever** — No hidden costs, no premium tiers
-- ✅ **Your Data, Your Server** — Self-hosted on your domain
-- ✅ **Lightning Fast** — Deployed to 275+ global edge locations
-- ✅ **No Maintenance** — Serverless architecture, zero upkeep
-- ✅ **Powerful API** — Automate testing, bots, and workflows
-- ✅ **Beautiful UI** — Modern, dark mode, mobile-friendly
 
 ---
 
 ## Table of Contents
 
-- [Why Sphixmail?](#-why-sphixmail)
-- [Sphixmail vs Other Solutions](#-sphixmail-vs-other-solutions)
-- [Try It Now — Live Demo](#-try-it-now--live-demo)
-- [Features](#-features-that-make-life-easier)
-- [Project Structure](#-project-structure)
-- [Deployment Guide](#-deployment-guide)
+- [Why Sphixmail?](#why-sphixmail)
+- [Sphixmail vs. Other Solutions](#sphixmail-vs-other-solutions)
+- [Live Demo](#live-demo)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Deployment Guide](#deployment-guide)
 - [Configuration](#configuration)
 - [Public REST API](#public-rest-api)
 - [Documentation](#documentation)
 - [Security](#security)
 - [Database Schema](#database-schema)
-- [Multi-Domain](#multi-domain)
+- [Multi-Domain Support](#multi-domain-support)
 - [Maintenance](#maintenance)
 - [Contributing](#contributing)
 - [License](#license)
+- [Acknowledgments](#acknowledgments)
 
 ---
 
+## Why Sphixmail?
+
+Traditional temp mail services often track your data, load slowly under ad networks, or charge monthly fees for basic features. Sphixmail gives you complete control instead:
+
+- **100% free forever** — no hidden costs, no premium tiers
+- **Your data, your server** — self-hosted on your own domain
+- **Lightning fast** — deployed to 275+ global edge locations
+- **Zero maintenance** — serverless architecture, no upkeep required
+- **Powerful API** — automate testing, bots, and workflows
+- **Modern UI** — clean design with dark mode and mobile support
+
 ---
 
-## 💎 Sphixmail vs Other Solutions
+## Sphixmail vs. Other Solutions
 
-**See why developers and privacy-conscious users choose Sphixmail:**
-
-| What You Get | 🎯 Sphixmail | ⚠️ Other Temp Mail | 💸 VPS Solution |
+| Capability | Sphixmail | Typical Temp Mail | Self-Managed VPS |
 |---|---|---|---|
-| **Monthly Cost** | **$0 forever** | Free (with ads) or $5-10/mo | $5-20/mo + maintenance |
-| **Speed** | ⚡ <50ms globally | 🐌 Varies, often slow | Depends on location |
-| **Privacy** | ✅ You own everything | ❌ They track & monetize | ✅ You own it |
-| **Ads** | ✅ Zero ads | ❌ Ads everywhere | ✅ No ads |
-| **Setup Time** | 10 minutes | Instant (but limited) | Hours/days |
-| **Maintenance** | ✅ Zero | None needed | Manual updates required |
-| **API Access** | ✅ Full REST API | Limited or paid | Build your own |
-| **Custom Domain** | ✅ Your domain | ❌ Their domain | ✅ Your domain |
-| **OTP Extraction** | ✅ Automatic | ❌ Manual copy | Not available |
-| **Admin Panel** | ✅ Full-featured | ❌ None | Build your own |
-| **Multi-Domain** | ✅ Unlimited | ❌ Single | ✅ Yes |
-| **Email Storage** | Your database | Their servers | Your server |
-| **Uptime** | 99.99% (Cloudflare) | Varies | Your responsibility |
+| Monthly cost | $0 forever | Free (with ads) or $5–10/mo | $5–20/mo + upkeep |
+| Speed | Sub-50ms globally | Varies, often slow | Depends on location |
+| Privacy | You own everything | Tracked and monetized | You own it |
+| Ads | None | Common | None |
+| Setup time | ~10 minutes | Instant, but limited | Hours to days |
+| Maintenance | None | None needed | Manual updates required |
+| API access | Full REST API | Limited or paid | Build your own |
+| Custom domain | Yes | No | Yes |
+| OTP extraction | Automatic | Manual | Not available |
+| Admin panel | Full-featured | None | Build your own |
+| Multi-domain support | Unlimited | Single domain | Yes |
+| Email storage | Your database | Their servers | Your server |
+| Uptime | 99.99% (Cloudflare) | Varies | Your responsibility |
 
-**Bottom line:** Sphixmail gives you enterprise features at zero cost, with the privacy of self-hosting and the reliability of Cloudflare's global network.
+**Bottom line:** Sphixmail delivers enterprise-grade features at zero cost, combining the privacy of self-hosting with the reliability of Cloudflare's global network.
 
 ---
 
-## 🎮 Try It Now — Live Demo
+## Live Demo
 
-**See Sphixmail in action at [sawith.net](https://sawith.net)**
+Try Sphixmail at **[sawith.net](https://sawith.net)**:
 
-### Get started in 30 seconds:
+1. Visit [sawith.net](https://sawith.net)
+2. Click the arrow button (→) to generate a random email address
+3. Copy your new disposable address
+4. Use it anywhere — sign-ups, verifications, OTP codes
+5. Check back — new messages appear automatically (auto-refresh every 2 seconds)
 
-1. **Visit** → [sawith.net](https://sawith.net)
-2. **Click** the arrow button (🡢) to generate a random email
-3. **Copy** your new disposable email address
-4. **Use it anywhere** — sign up for services, verify accounts, receive OTP codes
-5. **Check back** — Your emails appear instantly (auto-refresh every 2 seconds)
+**Use cases:**
+- Testing — QA, automation, integration tests
+- Privacy — keep your real email address private
+- Bots — automated registration and verification flows
+- One-time signups — avoid spam in your primary inbox
+- Development — test email flows without a real inbox
 
-### 🎯 Perfect for:
-- 🧪 **Testing** — QA, automation, integration tests
-- 🔐 **Privacy** — Keep your real email private
-- 🤖 **Bots** — Automated registration and verification
-- 📧 **One-time signups** — Avoid spam in your inbox
-- 💻 **Development** — Test email flows without real inboxes
-
-### 📚 Need Help?
-- **User Guide:** [docs.html](https://sawith.net/docs.html) — Step-by-step tutorials
-- **API Docs:** [api-doc.html](https://sawith.net/api-doc.html) — Interactive playground with live examples
+**Guides:** [User Guide](https://sawith.net/docs.html) · [Interactive API Docs](https://sawith.net/api-doc.html)
 
 ---
 
 ## Screenshots
 
-<div align="center">
+| Dark Mode — Main Interface | Light Mode — Email Reading |
+|---|---|
+| Clean, auto-refreshing inbox with OTP detection | HTML emails rendered safely in an isolated iframe |
 
-### 🌙 Dark Mode - Main Interface
-*Clean, modern UI with auto-refreshing inbox and OTP detection*
-
-### ☀️ Light Mode - Email Reading
-*HTML emails rendered safely in isolated iframe with syntax highlighting*
-
-### 🔧 Admin Panel - Dashboard
-*Real-time statistics with charts for 7 days, 6 weeks, 12 months, or 7 years*
-
-### 🎨 Appearance Customization
-*Custom backgrounds, mascot positioning, and transparency controls*
-
-</div>
+| Admin Panel — Dashboard | Appearance Customization |
+|---|---|
+| Real-time statistics across 7 days, 6 weeks, 12 months, or 7 years | Custom backgrounds, mascot positioning, and transparency controls |
 
 ---
 
-## ✨ Features That Make Life Easier
+## Features
 
-### 📬 Instant Email Addresses
-**No signup. No login. Just click and go.**
+### Instant Email Addresses
+- **Random generator** — Indonesian-style names, e.g. `langitsenja42@yourdomain.com`
+- **Custom names** — choose your own username (e.g. `testing@yourdomain.com`)
+- **Multiple domains** — select from any configured domain
+- **Auto-save** — last inbox remembered across browser sessions
+- **Smart paste** — paste a full email address to auto-fill the field
 
-- 🎲 **Random Generator** — Get creative Indonesian-style names like `langitsenja42@yourdomain.com`
-- ✏️ **Custom Names** — Choose your own username (e.g., `testing@yourdomain.com`)
-- 🌐 **Multiple Domains** — Pick from your configured domains
-- 💾 **Auto-Save** — Last inbox remembered across browser sessions
-- 📋 **Smart Paste** — Paste full email addresses to auto-fill
+### Fast, Real-Time Inbox
+- **Auto-refresh** every 2–3 seconds
+- **OTP detection** — verification codes extracted and highlighted automatically
+- **HTML support** — emails rendered safely in sandboxed frames
+- **Live timestamps** — relative time, with full WIB datetime on hover
+- **WIB clock** — real-time Jakarta timezone clock in the navbar
 
-### ⚡ Lightning-Fast Inbox
-**See emails the moment they arrive.**
+### Customization
+- **Custom background** — upload an image with adjustable transparency
+- **Mascot/logo** — position decorative images anywhere (X/Y + size)
+- **Dark/light mode** — toggle with saved preference
+- **Bilingual** — English and Bahasa Indonesia
 
-- 🔄 **Auto-Refresh** — Updates every 2-3 seconds automatically
-- 🎯 **OTP Detection** — Verification codes extracted and highlighted instantly
-- 📧 **HTML Support** — Emails rendered beautifully in safe sandboxed frames
-- ⏱️ **Live Timestamps** — Relative time with full WIB datetime on hover
-- 🕐 **WIB Clock** — Real-time Jakarta timezone clock in navbar
-
-### 🎨 Customize Everything
-**Make it yours with zero code.**
-
-- 🖼️ **Custom Background** — Upload your own image with transparency control
-- 🎭 **Mascot/Logo** — Position decorative images anywhere (X/Y + size)
-- 🌓 **Dark/Light Mode** — Easy toggle, preference saved
-- 🌍 **Bilingual** — English & Indonesian (Bahasa Indonesia)
-
-### 🔌 Developer-Friendly API
-**Automate everything with REST API.**
+### Developer-Friendly API
 
 ```bash
 # Get domains
 curl https://yourmail.com/pub/domains/YOUR_API_KEY
 
-# Wait for OTP (no API key needed!)
+# Wait for OTP (no API key needed)
 curl "https://yourmail.com/pub/inbox/user@domain.com/wait-otp?timeout=30"
 # Returns: {"found": true, "otp": "123456", ...}
 ```
 
-**Available Endpoints:**
-- ✅ List domains
-- ✅ Validate email addresses  
-- ✅ Fetch messages
-- ✅ Delete messages
-- ✅ Usage statistics
-- ✅ **Wait for OTP** — Perfect for automation & testing
+Available endpoints:
+- List domains
+- Validate email addresses
+- Fetch messages
+- Delete messages
+- Usage statistics
+- Wait for OTP (ideal for automation and testing)
 
-### 🛡️ Full Admin Control
-**Manage everything from a beautiful web dashboard.**
-
-- 📊 **Analytics** — Charts for 7d / 6w / 12m / 7y periods
-- 🌐 **Domain Management** — Add unlimited domains, set access control
-- 🔑 **API Keys** — Generate, revoke, set rate limits
-- ⚙️ **Zero-Code Config** — All settings via UI, no file editing
-- 🎨 **Appearance Editor** — Visual customization tools
-- 🚫 **Access Control** — Whitelist/blacklist usernames, admin bypass
+### Full Admin Control
+- **Analytics** — charts for 7d / 6w / 12m / 7y periods
+- **Domain management** — add unlimited domains with access control
+- **API keys** — generate, revoke, and set rate limits
+- **Zero-code configuration** — all settings managed via the UI
+- **Appearance editor** — visual customization tools
+- **Access control** — whitelist/blacklist usernames, admin bypass
 
 ---
 
-## 📁 Project Structure
-
-**Simple, organized, easy to understand:**
+## Project Structure
 
 ```
 sphixmail/
@@ -231,31 +198,14 @@ sphixmail/
 
 ## Deployment Guide
 
-> No server experience needed. Everything runs free on Cloudflare.
+No server experience needed — everything runs free on Cloudflare. Total cost: **$0/month**, unless you exceed Cloudflare's generous free tier.
 
-### Prerequisites
-- A [Cloudflare](https://dash.cloudflare.com) account (free)
+**Prerequisites:**
+- A free [Cloudflare](https://dash.cloudflare.com) account
 - A domain connected to Cloudflare (required to receive email)
 - [Node.js](https://nodejs.org) v18 or higher installed locally
 
-## 📦 Deployment Guide
-
-### Get Your Own Disposable Email Service in 10 Minutes
-
-**No coding skills needed.** Just copy-paste these commands and you're done.
-
-**What you'll need:**
-- ☁️ A free [Cloudflare](https://dash.cloudflare.com) account (takes 2 minutes to sign up)
-- 🌐 A domain name (any domain - even a $1/year domain works!)
-- 💻 [Node.js](https://nodejs.org) installed on your computer
-
-**Total cost:** $0/month forever (unless you exceed Cloudflare's generous free tier)
-
----
-
 ### Step 1 — Download Sphixmail
-
-Open your terminal and run:
 
 ```bash
 git clone https://github.com/devanonaufal/sphixmail.git
@@ -263,9 +213,7 @@ cd sphixmail
 npm install
 ```
 
-**What this does:** Downloads Sphixmail and installs required packages.
-
----
+This downloads Sphixmail and installs its dependencies.
 
 ### Step 2 — Create Your Database
 
@@ -273,16 +221,14 @@ npm install
 npm run db:create
 ```
 
-You'll see output like this:
+Output will look like this:
 
 ```
 ✅ Created your database: sphixmail-db
 database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
-**Copy that `database_id`** — you'll need it in the next step.
-
-Open the file `wrangler.toml` and find this section:
+Copy the `database_id` value. Open `wrangler.toml` and paste it into:
 
 ```toml
 [[d1_databases]]
@@ -290,8 +236,6 @@ binding = "DB"
 database_name = "sphixmail-db"
 database_id = "PASTE-YOUR-ID-HERE"
 ```
-
----
 
 ### Step 3 — Configure Environment
 
@@ -305,9 +249,7 @@ WEB_HOST = "sphixmail.yourdomain.com"     # Domain for the web UI
 ADMIN_PASSWORD_HASH = "your-sha256-hash"  # See Step 4
 ```
 
----
-
-### Step 4 — Generate Admin Password Hash
+### Step 4 — Generate an Admin Password Hash
 
 ```bash
 node -e "
@@ -317,9 +259,7 @@ node -e "
 "
 ```
 
-Copy the output and paste it into `ADMIN_PASSWORD_HASH` in `wrangler.toml`.
-
----
+Copy the resulting hash into `ADMIN_PASSWORD_HASH` in `wrangler.toml`.
 
 ### Step 5 — Deploy
 
@@ -331,32 +271,28 @@ npm run db:migrate
 npm run deploy
 ```
 
----
-
 ### Step 6 — Enable Email Routing
 
-In [Cloudflare Dashboard](https://dash.cloudflare.com):
+In the [Cloudflare Dashboard](https://dash.cloudflare.com):
 
 1. Select your domain → **Email** → **Email Routing**
 2. Click **Enable Email Routing**
-3. Scroll to **Catch-all address** → action: **Send to Worker** → select `sphixmail`
+3. Under **Catch-all address**, set the action to **Send to Worker** and select `sphixmail`
 4. Save
 
 All emails sent to `*@mail.yourdomain.com` will now be processed by Sphixmail.
-
----
 
 ### After Deployment
 
 1. Open `https://yourwebdomain.com/admin.html`
 2. Log in with username `admin` and the password you set
-3. Go to **API Keys** tab → create a new key to start using the API
+3. Go to the **API Keys** tab to create a key and start using the API
 
 ---
 
 ## Configuration
 
-### Full wrangler.toml example
+### Full `wrangler.toml` Example
 
 ```toml
 name = "sphixmail"
@@ -375,7 +311,7 @@ WEB_HOST = "sphixmail.example.com"
 ADMIN_PASSWORD_HASH = "your-sha256-hash"
 
 [triggers]
-crons = ["0 * * * *"]   # automatic cleanup every hour
+crons = ["0 * * * *"]   # Automatic cleanup every hour
 ```
 
 ### Admin Panel Settings Reference
@@ -385,11 +321,11 @@ crons = ["0 * * * *"]   # automatic cleanup every hour
 | `forbidden_usernames` | Blocked usernames, e.g. `["admin","root"]` | `[]` |
 | `username_min` | Minimum username length | `3` |
 | `username_max` | Maximum username length | `30` |
-| `daily_inbox_limit` | Max inboxes per session per day (0 = unlimited) | `10` |
+| `daily_inbox_limit` | Max inboxes per session per day (`0` = unlimited) | `10` |
 | `auto_delete_enabled` | Enable automatic message deletion | `false` |
-| `delete_value` | Amount to delete after (e.g. `7`) | `7` |
-| `delete_unit` | Unit: `m`=minute, `h`=hour, `d`=day, `w`=week, `mo`=month | `d` |
-| `max_messages_per_inbox` | Max stored messages per inbox (0 = unlimited) | `50` |
+| `delete_value` | Amount of time before deletion (e.g. `7`) | `7` |
+| `delete_unit` | Unit: `m` = minute, `h` = hour, `d` = day, `w` = week, `mo` = month | `d` |
+| `max_messages_per_inbox` | Max stored messages per inbox (`0` = unlimited) | `50` |
 
 ---
 
@@ -397,7 +333,7 @@ crons = ["0 * * * *"]   # automatic cleanup every hour
 
 Base URL: `https://yourmail.com/pub/`
 
-All endpoints require an API Key except `wait-otp`. Create keys in **Admin Panel → API Keys**.
+All endpoints require an API key except `wait-otp`. Create keys under **Admin Panel → API Keys**.
 
 ### List Active Domains
 
@@ -475,7 +411,7 @@ GET /pub/stats/[apikey]?filters=total_messages,unread_messages
 }
 ```
 
-### Wait for OTP (no API Key required)
+### Wait for OTP (No API Key Required)
 
 Blocks until an OTP email arrives or the timeout is reached:
 
@@ -501,37 +437,30 @@ curl "https://yourmail.com/pub/inbox/user%40mail.example.com/wait-otp?timeout=30
 
 ## Documentation
 
-### 📚 Complete User Guide
+### User Guide
 
-Visit **[sawith.net/docs.html](https://sawith.net/docs.html)** for comprehensive documentation including:
+Visit **[sawith.net/docs.html](https://sawith.net/docs.html)** for full documentation, including:
 
-- **Getting Started**: Creating your first inbox
-- **Email Management**: Receiving, reading, and organizing messages
-- **OTP Auto-detection**: Automatic verification code extraction
-- **API Integration**: Complete REST API reference with examples
-- **FAQ**: Common questions and troubleshooting
+- Getting started — creating your first inbox
+- Email management — receiving, reading, and organizing messages
+- OTP auto-detection — automatic verification code extraction
+- API integration — complete REST API reference with examples
+- FAQ — common questions and troubleshooting
 
-### 🔌 Interactive API Documentation
+### Interactive API Documentation
 
 Visit **[sawith.net/api-doc.html](https://sawith.net/api-doc.html)** for:
 
-- **Live API Playground**: Test endpoints directly in your browser
-- **Request/Response Examples**: Copy-paste ready code snippets
-- **Authentication Guide**: API key setup and usage
-- **Rate Limiting Info**: Understand usage quotas
-- **Long-polling Guide**: OTP wait endpoint usage
+- A live API playground to test endpoints in your browser
+- Ready-to-use request/response examples
+- Authentication and API key setup
+- Rate limiting details
+- Long-polling guide for the OTP wait endpoint
 
-### 📖 Available in Multiple Languages
+Documentation is available in **English** and **Bahasa Indonesia** — toggle the language in the top-right corner of any page.
 
-All documentation is available in:
-- 🇺🇸 **English**
-- 🇮🇩 **Bahasa Indonesia**
-
-Toggle language in the top-right corner of any page.
-
-### 🎓 Quick Links
-
-- [How to create a custom username](https://sawith.net/docs.html#create)
+**Quick links:**
+- [Creating a custom username](https://sawith.net/docs.html#create)
 - [Understanding OTP auto-extraction](https://sawith.net/docs.html#otp)
 - [Using the wait-otp endpoint](https://sawith.net/docs.html#api-wait)
 - [Setting up API keys](https://sawith.net/admin.html)
@@ -541,20 +470,20 @@ Toggle language in the top-right corner of any page.
 
 ## Security
 
-- **Admin login**: HttpOnly + SameSite cookie, expires after 24 hours
-- **Lockout**: 5 failed login attempts → 15-minute lockout
-- **API Keys**: stored in database, revocable at any time, optional expiry date
-- **Rate limiting**: per-minute request cap per API key
-- **Public inbox model**: any address is readable by anyone — designed for disposable/OTP use
-- **Safe HTML email**: rendered inside a sandboxed iframe — no external scripts execute
-- **Password hashing**: SHA-256 via Web Crypto API
-- **Anti-devtools**: right-click and keyboard shortcut blocking on the public UI
+- **Admin login** — HttpOnly + SameSite cookie, expires after 24 hours
+- **Lockout** — 5 failed login attempts trigger a 15-minute lockout
+- **API keys** — stored in the database, revocable at any time, with optional expiry
+- **Rate limiting** — per-minute request cap per API key
+- **Public inbox model** — any address is readable by anyone, by design, for disposable/OTP use
+- **Safe HTML rendering** — emails render inside a sandboxed iframe; no external scripts execute
+- **Password hashing** — SHA-256 via the Web Crypto API
+- **Anti-devtools** — right-click and keyboard shortcuts are blocked on the public UI
 
 ---
 
 ## Database Schema
 
-Tables created automatically on first deploy:
+Tables are created automatically on first deploy:
 
 | Table | Purpose |
 |---|---|
@@ -572,75 +501,70 @@ Tables created automatically on first deploy:
 
 ---
 
-## Multi-Domain
+## Multi-Domain Support
 
-Support multiple email domains simultaneously — **no redeployment needed**:
+Support multiple email domains simultaneously — no redeployment needed:
 
-1. Enable Email Routing for each domain in Cloudflare Dashboard and route catch-all to the `sphixmail` worker
+1. Enable Email Routing for each domain in the Cloudflare Dashboard and route its catch-all to the `sphixmail` worker
 2. Open **Admin Panel → Domains** → click **Add Domain**
-3. Enter the domain name → Save
+3. Enter the domain name and save
 
-The new domain immediately appears in the frontend dropdown and starts receiving emails.
+The new domain appears immediately in the frontend dropdown and starts receiving emails.
 
-> `MAIL_DOMAIN` in `wrangler.toml` is only used as the initial seed domain on first deploy. All domain management after that is done through the Admin Panel.
+> `MAIL_DOMAIN` in `wrangler.toml` is only used as the initial seed domain on first deploy. All domain management afterward is done through the Admin Panel.
 
 ---
 
 ## Maintenance
 
-### Redeploy after code changes:
+**Redeploy after code changes:**
 ```bash
 npm run deploy
 ```
 
-### Run database migrations (after schema changes):
+**Run database migrations after schema changes:**
 ```bash
 npm run db:migrate
 ```
-
 > Safe to run multiple times — existing data is never dropped.
 
-### Automatic Cleanup (Cron)
-Every hour, Cloudflare runs automated maintenance:
+**Automatic cleanup (cron):** every hour, Cloudflare runs maintenance to:
 - Delete old messages (if auto-delete is enabled in Settings)
-- Purge old logs (> 2–3 days)
+- Purge old logs (older than 2–3 days)
 - Remove expired admin sessions
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Whether it's bug reports, feature requests, or code improvements, your help makes Sphixmail better for everyone.
+Contributions are welcome — bug reports, feature requests, and code improvements all help make Sphixmail better.
 
-### 🐛 Found a Bug?
-
+### Reporting a Bug
 1. Check [existing issues](https://github.com/devanonaufal/sphixmail/issues) to avoid duplicates
-2. Open a new issue with:
-   - Clear description of the problem
+2. Open a new issue including:
+   - A clear description of the problem
    - Steps to reproduce
-   - Expected vs actual behavior
+   - Expected vs. actual behavior
    - Your environment (browser, OS, Cloudflare region if relevant)
 
-### 💡 Have a Feature Request?
-
+### Requesting a Feature
 1. Open an issue with the `enhancement` label
 2. Describe the feature and its use case
-3. Explain why it would benefit other users
+3. Explain the benefit to other users
 
-### 🔧 Want to Contribute Code?
-
+### Contributing Code
 1. Fork this repository
 2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make your changes following the existing code style
-4. Test thoroughly (both frontend and backend if applicable)
-5. Commit with clear messages: `git commit -m "feat: add your feature"`
+3. Make your changes, following the existing code style
+4. Test thoroughly (frontend and backend, as applicable)
+5. Commit with a clear message: `git commit -m "feat: add your feature"`
 6. Push to your fork: `git push origin feature/your-feature`
-7. Open a Pull Request with:
-   - Clear description of changes
-   - Screenshots/demos for UI changes
-   - Any breaking changes highlighted
+7. Open a pull request including:
+   - A clear description of the changes
+   - Screenshots or demos for UI changes
+   - Any breaking changes, clearly highlighted
 
-### 📋 Development Setup
+### Development Setup
 
 ```bash
 # Clone your fork
@@ -657,20 +581,19 @@ npm run dev
 npm run db:local
 ```
 
-### 🎨 Code Style
-
-- **TypeScript**: Follow existing patterns in `src/`
-- **Frontend**: Vanilla JS (no frameworks), semantic HTML, CSS custom properties
-- **Comments**: Add `ponytail:` comments for deliberate simplifications with upgrade paths
-- **Commits**: Use conventional commit format (`feat:`, `fix:`, `docs:`, `refactor:`)
+### Code Style
+- **TypeScript** — follow existing patterns in `src/`
+- **Frontend** — vanilla JS (no frameworks), semantic HTML, CSS custom properties
+- **Comments** — use `ponytail:` comments for deliberate simplifications with an upgrade path
+- **Commits** — follow the conventional commit format (`feat:`, `fix:`, `docs:`, `refactor:`)
 
 ---
 
 ## License
 
-**MIT License** — Free to use, modify, and distribute.
+MIT License — free to use, modify, and distribute.
 
-Copyright (c) 2026 Devano Naufal
+Copyright © 2026 Devano Naufal
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -682,59 +605,34 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Acknowledgments
 
-**Sphixmail** is built with:
-- [Cloudflare Workers](https://workers.cloudflare.com/) - Serverless edge computing
-- [Cloudflare D1](https://developers.cloudflare.com/d1/) - Distributed SQLite database
-- [Hono](https://hono.dev/) - Lightweight web framework
-- [Postal-MIME](https://github.com/postalsys/postal-mime) - Fast email parser
+Sphixmail is built with:
 
-Special thanks to the open-source community for these amazing tools.
+- [Cloudflare Workers](https://workers.cloudflare.com/) — serverless edge computing
+- [Cloudflare D1](https://developers.cloudflare.com/d1/) — distributed SQLite database
+- [Hono](https://hono.dev/) — lightweight web framework
+- [Postal-MIME](https://github.com/postalsys/postal-mime) — fast, RFC-compliant email parser
 
----
+Special thanks to the open-source community for these tools.
 
 ---
 
 <div align="center">
 
-## 🚀 Ready to Deploy Your Own?
+### Ready to deploy your own?
 
-**Get started in 10 minutes. Zero monthly costs. Complete control.**
+Get started in 10 minutes, with zero monthly cost and complete control.
 
-### [📖 Read the Deployment Guide](#-deployment-guide) • [🎮 Try Live Demo](https://sawith.net)
+[**Read the Deployment Guide**](#deployment-guide) · [**Try the Live Demo**](https://sawith.net)
 
----
-
-## 💬 Get Help & Connect
-
-**Questions? Ideas? Found a bug?**
-
-💬 **[Discussions](https://github.com/devanonaufal/sphixmail/discussions)** — Ask questions, share ideas  
-🐛 **[Report Issues](https://github.com/devanonaufal/sphixmail/issues)** — Found a problem? Let us know  
-🔀 **[Contribute](https://github.com/devanonaufal/sphixmail/pulls)** — Pull requests welcome  
-⭐ **[Star on GitHub](https://github.com/devanonaufal/sphixmail)** — Show your support
-
----
-
-## 🙏 Acknowledgments
-
-Built with powerful open-source tools:
-- [Cloudflare Workers](https://workers.cloudflare.com/) — Global edge computing platform
-- [Cloudflare D1](https://developers.cloudflare.com/d1/) — Serverless SQL database
-- [Hono](https://hono.dev/) — Ultrafast web framework
-- [Postal-MIME](https://github.com/postalsys/postal-mime) — RFC-compliant email parser
+**Questions, ideas, or bugs?**
+[Discussions](https://github.com/devanonaufal/sphixmail/discussions) · [Report an Issue](https://github.com/devanonaufal/sphixmail/issues) · [Pull Requests](https://github.com/devanonaufal/sphixmail/pulls) · [Star on GitHub](https://github.com/devanonaufal/sphixmail)
 
 ---
 
 **Made with ❤️ by [Devano Naufal](https://github.com/devanonaufal)**
 
-🌐 [Live Demo](https://sawith.net) • 📖 [Documentation](https://sawith.net/docs.html) • 🔌 [API Docs](https://sawith.net/api-doc.html) • ⭐ [GitHub](https://github.com/devanonaufal/sphixmail)
+[Live Demo](https://sawith.net) · [Documentation](https://sawith.net/docs.html) · [API Docs](https://sawith.net/api-doc.html) · [GitHub](https://github.com/devanonaufal/sphixmail)
 
----
-
-### Sphixmail — Privacy-First Disposable Email
-
-**Deploy once. Run forever. Completely free.**
-
-<sub>MIT License • Copyright © 2026 Devano Naufal • Open Source Forever</sub>
+<sub>MIT License · Copyright © 2026 Devano Naufal · Open Source Forever</sub>
 
 </div>
