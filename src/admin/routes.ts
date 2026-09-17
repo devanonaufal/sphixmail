@@ -177,15 +177,34 @@ admin.get('/domains', requireAdmin, async (c) => {
 });
 
 admin.post('/domains', requireAdmin, async (c) => {
-  const { domain, type = 'open' } = await c.req.json().catch(() => ({})) as { domain?: string; type?: 'open' | 'member' };
+  const { domain, type = 'open' } = await c.req.json().catch(() => ({})) as { domain?: string; type?: 'open' | 'admin' };
   if (!domain) return c.json({ error: 'domain required' }, 400);
-  await upsertDomain(c.env.DB, domain.trim().toLowerCase(), type);
+  
+  // Validate domain format
+  const domainTrimmed = domain.trim().toLowerCase();
+  const domainRegex = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i;
+  if (!domainRegex.test(domainTrimmed)) {
+    return c.json({ error: 'Invalid domain format. Must be valid DNS name (e.g. mail.example.com)' }, 400);
+  }
+  
+  // Validate type (runtime check)
+  if (type && !['open', 'admin'].includes(type)) {
+    return c.json({ error: 'Invalid type. Must be "open" or "admin"' }, 400);
+  }
+  
+  await upsertDomain(c.env.DB, domainTrimmed, type);
   return c.json({ ok: true });
 });
 
 admin.patch('/domains/:domain', requireAdmin, async (c) => {
   const domain = decodeURIComponent(c.req.param('domain'));
-  const body = await c.req.json().catch(() => ({})) as { is_active?: boolean; type?: 'open' | 'member' };
+  const body = await c.req.json().catch(() => ({})) as { is_active?: boolean; type?: 'open' | 'admin' };
+  
+  // Validate type if provided (runtime check)
+  if (body.type && !['open', 'admin'].includes(body.type)) {
+    return c.json({ error: 'Invalid type. Must be "open" or "admin"' }, 400);
+  }
+  
   if (body.is_active !== undefined) await setDomainActive(c.env.DB, domain, body.is_active);
   if (body.type) await setDomainType(c.env.DB, domain, body.type);
   return c.json({ ok: true });

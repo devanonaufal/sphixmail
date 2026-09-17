@@ -233,23 +233,92 @@ async function loadDomains(){
         <div class="domain-card-name" title="${esc(d.domain)}">${esc(d.domain)}</div>
         <span class="badge ${d.is_active?'badge-green':'badge-red'}">${d.is_active?'Active':'Inactive'}</span>
       </div>
+      <div style="margin:10px 0 4px;font-size:11px;color:var(--text-3)">
+        <b style="color:var(--text-2)">Type:</b> ${d.type==='open'?'Open (siapapun bisa pakai)':'Admin (hanya admin bisa pakai)'}
+      </div>
       <div class="domain-card-actions">
-        <button class="domain-edit-btn" onclick="toggleDomainActive('${esc(d.domain)}',${d.is_active})">${d.is_active?'✕ Nonaktifkan':'✓ Aktifkan'}</button>
+        <button class="domain-edit-btn" onclick="editDomain('${esc(d.domain)}',${d.is_active},'${d.type}')" style="flex:1">✏️ Edit</button>
         <button class="domain-del-btn" onclick="delDomain('${esc(d.domain)}')" title="Hapus">🗑</button>
       </div>
     </div>`).join('');
   // Also keep hidden table for backward compat
   $('domainTable').innerHTML=domains.map(d=>`<tr><td>${esc(d.domain)}</td></tr>`).join('');
 }
-async function toggleDomainActive(domain,active){ await api('PATCH',`/domains/${encodeURIComponent(domain)}`,{is_active:!active}); loadDomains(); }
-async function toggleDomainType(domain,type){ await api('PATCH',`/domains/${encodeURIComponent(domain)}`,{type:type==='open'?'member':'open'}); loadDomains(); }
+
+async function editDomain(domain, isActive, currentType) {
+  const titleEl = document.getElementById('admModalTitle');
+  const content = document.getElementById('admModalContent');
+  const confirmBtn = document.getElementById('admModalConfirm');
+  const cancelBtn = document.getElementById('admModalCancel');
+  
+  titleEl.textContent = 'Update Domain';
+  confirmBtn.textContent = 'UPDATE';
+  confirmBtn.className = 'adm-modal-confirm';
+  
+  content.innerHTML = `
+    <div style="margin-bottom:14px">
+      <div class="adm-modal-label">Domain</div>
+      <input id="_mf_domain" class="adm-modal-input" value="${esc(domain)}" readonly style="background:var(--bg);color:var(--text-3)" />
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="adm-modal-label">Type</div>
+      <select id="_mf_type" class="adm-modal-input" style="cursor:pointer;padding-right:30px;background-image:url('data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%2371717a\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e');background-position:right 10px center;background-repeat:no-repeat;background-size:18px;appearance:none">
+        <option value="open" ${currentType==='open'?'selected':''}>Open</option>
+        <option value="admin" ${currentType==='admin'?'selected':''}>Admin</option>
+      </select>
+      <div style="font-size:11px;color:var(--text-3);margin-top:4px" id="_typeHint">${currentType==='open'?'Siapapun bisa pakai domain ini':'Hanya admin yang bisa pakai domain ini'}</div>
+    </div>
+    <div style="margin-bottom:8px">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+        <span class="adm-modal-label" style="margin:0;flex:1">Enable</span>
+        <label class="toggle"><input type="checkbox" id="_mf_active" ${isActive?'checked':''} /><span class="toggle-slider"></span></label>
+      </label>
+    </div>
+  `;
+  
+  _openModal();
+  
+  // Update hint on type change
+  const typeSelect = document.getElementById('_mf_type');
+  const typeHint = document.getElementById('_typeHint');
+  typeSelect.addEventListener('change', () => {
+    typeHint.textContent = typeSelect.value === 'open' 
+      ? 'Siapapun bisa pakai domain ini' 
+      : 'Hanya admin yang bisa pakai domain ini';
+  });
+  
+  const done = async (ok) => {
+    _closeModal();
+    confirmBtn.onclick = null;
+    cancelBtn.onclick = null;
+    if (!ok) return;
+    
+    const newActive = document.getElementById('_mf_active').checked;
+    const newType = document.getElementById('_mf_type').value;
+    
+    // Only update if changed
+    const updates = {};
+    if (newActive !== isActive) updates.is_active = newActive;
+    if (newType !== currentType) updates.type = newType;
+    
+    if (Object.keys(updates).length > 0) {
+      await api('PATCH', `/domains/${encodeURIComponent(domain)}`, updates);
+      toast('Domain diupdate', 'success');
+      loadDomains();
+    }
+  };
+  
+  confirmBtn.onclick = () => done(true);
+  cancelBtn.onclick = () => done(false);
+}
+
 async function delDomain(domain){
   const ok = await admConfirm('Hapus Domain', `Hapus domain <b>${esc(domain)}</b>? Tindakan ini tidak dapat dibatalkan.`, true);
   if(!ok) return;
   await api('DELETE',`/domains/${encodeURIComponent(domain)}`);
   loadDomains(); toast('Domain dihapus');
 }
-window.toggleDomainActive=toggleDomainActive; window.toggleDomainType=toggleDomainType; window.delDomain=delDomain;
+window.editDomain=editDomain; window.delDomain=delDomain;
 
 $('addDomainBtn').addEventListener('click', async () => {
   const result = await admPrompt('Tambah Domain', [

@@ -27,7 +27,7 @@ export interface Session {
 
 export interface Domain {
   domain: string;
-  type: 'open' | 'member';
+  type: 'open' | 'admin';
   is_active: number;
   added_at: string;
 }
@@ -172,7 +172,7 @@ export async function isInboxInSession(db: D1Database, sessionId: string, addres
 // Domains
 // ============================================================
 
-export async function getActiveDomains(db: D1Database, type?: 'open' | 'member'): Promise<Domain[]> {
+export async function getActiveDomains(db: D1Database, type?: 'open' | 'admin'): Promise<Domain[]> {
   if (type) {
     return db
       .prepare('SELECT * FROM domains WHERE is_active = 1 AND type = ? ORDER BY added_at ASC')
@@ -190,7 +190,7 @@ export async function getAllDomains(db: D1Database): Promise<Domain[]> {
   return db.prepare('SELECT * FROM domains ORDER BY added_at ASC').all<Domain>().then(r => r.results);
 }
 
-export async function upsertDomain(db: D1Database, domain: string, type: 'open' | 'member' = 'open'): Promise<void> {
+export async function upsertDomain(db: D1Database, domain: string, type: 'open' | 'admin' = 'open'): Promise<void> {
   await db
     .prepare('INSERT OR IGNORE INTO domains (domain, type) VALUES (?, ?)')
     .bind(domain, type)
@@ -201,7 +201,7 @@ export async function setDomainActive(db: D1Database, domain: string, active: bo
   await db.prepare('UPDATE domains SET is_active = ? WHERE domain = ?').bind(active ? 1 : 0, domain).run();
 }
 
-export async function setDomainType(db: D1Database, domain: string, type: 'open' | 'member'): Promise<void> {
+export async function setDomainType(db: D1Database, domain: string, type: 'open' | 'admin'): Promise<void> {
   await db.prepare('UPDATE domains SET type = ? WHERE domain = ?').bind(type, domain).run();
 }
 

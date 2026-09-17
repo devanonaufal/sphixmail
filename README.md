@@ -142,7 +142,7 @@ Ideal for automated testing, registration bots, and scraping workflows.
 Manage everything through a secure web-based admin panel:
 
 - **Dashboard** — statistics and charts for received messages (7d / 6w / 12m / 7y)
-- **Domains** — add/remove domains, set open or member-only access, toggle active state
+- **Domains** — add/remove domains, set open or admin-only access, toggle active state
 - **API Keys** — create, revoke, and manage keys with per-minute rate limits
 - **Settings** — configure all options without touching code
 - **Appearance** — customize background, mascot, and visual theme

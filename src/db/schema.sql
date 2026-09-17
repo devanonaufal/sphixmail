@@ -50,7 +50,7 @@ CREATE INDEX IF NOT EXISTS idx_session_inboxes_session ON session_inboxes(sessio
 
 CREATE TABLE IF NOT EXISTS domains (
   domain TEXT PRIMARY KEY,
-  type TEXT NOT NULL DEFAULT 'open',    -- 'open' | 'member'
+  type TEXT NOT NULL DEFAULT 'open',    -- 'open' | 'admin'
   is_active INTEGER NOT NULL DEFAULT 1,
   added_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
