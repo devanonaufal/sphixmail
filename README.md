@@ -41,13 +41,12 @@
 
 ## Table of Contents
 
-- [Changelog](#changelog)
-- [Why Sphixmail?](#why-sphixmail)
-- [Live Demo](#live-demo)
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Project Structure](#project-structure)
-- [Deployment Guide](#deployment-guide)
+- [Why Sphixmail?](#-why-sphixmail)
+- [Sphixmail vs Other Solutions](#-sphixmail-vs-other-solutions)
+- [Try It Now — Live Demo](#-try-it-now--live-demo)
+- [Features](#-features-that-make-life-easier)
+- [Project Structure](#-project-structure)
+- [Deployment Guide](#-deployment-guide)
 - [Configuration](#configuration)
 - [Public REST API](#public-rest-api)
 - [Documentation](#documentation)
@@ -59,54 +58,6 @@
 - [License](#license)
 
 ---
-
-## Changelog
-
-### Version 1.1.1 — September 18, 2026
-
-**🔒 Security & Performance Enhancements:**
-
-#### Domain Access Control Improvements
-- Enhanced domain visibility control for admin-only domains
-- Improved session persistence across admin panel operations
-- Optimized domain configuration synchronization
-
-#### Technical Improvements
-- Implemented credential forwarding in all API communication layers
-- Enhanced database conflict resolution strategy for domain management
-- Improved cookie-based authentication flow across frontend and backend
-
-**Result:** More robust domain access control and improved admin panel reliability.
-
----
-
-### Version 1.1.0 — September 17, 2026
-
-**🎉 Major Updates:**
-
-#### Domain Management Enhancement
-- **Improved UI:** Domain type "Member" renamed to "Admin" for clarity
-- **New Modal Editor:** Interactive domain editing with dropdown selection
-  - Domain type: `Open` (anyone can use) or `Admin` (admin-only)
-  - Toggle enable/disable
-  - Real-time hint updates
-- **Enhanced Security:**
-  - Added domain format validation (DNS regex)
-  - Added runtime type validation to prevent invalid data
-  - Fixed 2 critical security vulnerabilities
-
-#### Technical Improvements
-- Domain format validation using strict DNS regex pattern
-- Runtime type checking for API endpoints
-- Improved error messages for better debugging
-- TypeScript type safety improvements
-
-#### API Changes
-- Domain type values: `'member'` → `'admin'` (backward compatible)
-- `POST /admin/domains` - now validates domain format
-- `PATCH /admin/domains/:domain` - now validates type value
-
-**Security Score:** Improved from 8.6/10 to 9.5/10
 
 ---
 
