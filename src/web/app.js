@@ -457,14 +457,58 @@ function openMessage(msg) {
   body.innerHTML = '';
   if (msg.body_html) {
     const frame = document.createElement('iframe');
-    frame.setAttribute('sandbox', 'allow-same-origin');
+    frame.setAttribute('sandbox', 'allow-same-origin allow-popups allow-popups-to-escape-sandbox');
     frame.style.cssText = 'width:100%;border:none;min-height:200px;border-radius:8px';
     body.appendChild(frame);
     // Write after appended so contentDocument is accessible
     try {
       const doc = frame.contentDocument;
-      doc.open(); doc.write(msg.body_html); doc.close();
-      frame.style.height = (doc.body?.scrollHeight || 300) + 32 + 'px';
+      doc.open();
+      // Inject meta tags to allow images and set base for relative URLs
+      const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body { margin: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; }
+    img { max-width: 100%; height: auto; display: block; margin: 8px 0; }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>${msg.body_html}</body>
+</html>`;
+      doc.write(html);
+      doc.close();
+      
+      // Force all links to open in new tab
+      const links = doc.querySelectorAll('a');
+      links.forEach(a => {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+      });
+      
+      // Wait for images to load before calculating height
+      const images = doc.querySelectorAll('img');
+      if (images.length > 0) {
+        let loaded = 0;
+        const checkHeight = () => {
+          loaded++;
+          if (loaded >= images.length) {
+            frame.style.height = (doc.body?.scrollHeight || 300) + 32 + 'px';
+          }
+        };
+        images.forEach(img => {
+          if (img.complete) checkHeight();
+          else {
+            img.addEventListener('load', checkHeight);
+            img.addEventListener('error', checkHeight);
+          }
+        });
+      } else {
+        frame.style.height = (doc.body?.scrollHeight || 300) + 32 + 'px';
+      }
     } catch { /* cross-origin guard */ }
   } else {
     body.style.whiteSpace = 'pre-wrap';
