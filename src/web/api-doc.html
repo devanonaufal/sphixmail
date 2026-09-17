@@ -130,7 +130,24 @@
       <button class="nav-lang" id="themeBtn" title="Ganti tema">🌙</button>
       <a href="/" class="nav-btn">← Inbox</a>
       <a href="/docs.html" class="nav-btn">Docs</a>
-      <a href="/admin.html" class="nav-btn nav-btn-admin">Admin</a>
+      <a href="/admin.html" class="nav-btn nav-btn-admin" id="navAdminBtn">Admin</a>
+      <div class="nav-profile-wrap" id="navProfileWrap" style="display:none">
+        <button class="nav-profile-btn" id="navProfileBtn">
+          <div class="nav-profile-avatar">A</div>
+          <span class="nav-profile-name">Admin</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="nav-profile-dropdown" id="navProfileDropdown">
+          <a href="/admin.html" class="nav-profile-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Dashboard</span>
+          </a>
+          <button class="nav-profile-item nav-profile-logout" id="navProfileLogout">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
     </div>
   </nav>
 

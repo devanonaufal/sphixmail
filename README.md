@@ -5,17 +5,37 @@
 <img src="https://img.shields.io/badge/Hono-E36002?style=for-the-badge&logo=hono&logoColor=white" />
 <img src="https://img.shields.io/badge/D1%20SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" />
 
-# ✉ Sphixmail
+# ✉️ Sphixmail
 
-### Disposable Temporary Email — Self-Hosted, Serverless, Free
+### The Modern Disposable Email Service — Privacy-First, Lightning-Fast, Zero Cost
 
-**Sphixmail** is a fully self-hosted disposable email service built on Cloudflare Workers. No server, no VPS, no monthly cost. Deploy it to 275+ edge locations worldwide in minutes.
+**Sphixmail** is a fully self-hosted temporary email solution that runs on Cloudflare's global edge network. Get instant, disposable email addresses for testing, verification, and privacy protection—without servers, maintenance, or monthly bills.
 
-🌐 **[Live Demo: sawith.net](https://sawith.net)** | 📖 **[Documentation](https://sawith.net/docs.html)** | 🔌 **[API Reference](https://sawith.net/api-doc.html)**
+**Deploy once. Run forever. Completely free.**
 
-*Built with ❤️ by [Devano Naufal](https://github.com/devanonaufal)*
+🌐 **[Live Demo: sawith.net](https://sawith.net)** | 📖 **[Documentation](https://sawith.net/docs.html)** | 🔌 **[API Reference](https://sawith.net/api-doc.html)** | ⭐ **[Star on GitHub](https://github.com/devanonaufal/sphixmail)**
 
 </div>
+
+---
+
+## 🚀 Why Sphixmail?
+
+### Built for Privacy, Speed, and Zero Maintenance
+
+**Tired of traditional temp mail services that:**
+- 🚫 Track your data and sell it to advertisers
+- 🐌 Load slowly with annoying ads everywhere
+- 💰 Charge monthly fees for basic features
+- 🔒 Lock you into their platform
+
+**Sphixmail gives you complete control:**
+- ✅ **100% Free Forever** — No hidden costs, no premium tiers
+- ✅ **Your Data, Your Server** — Self-hosted on your domain
+- ✅ **Lightning Fast** — Deployed to 275+ global edge locations
+- ✅ **No Maintenance** — Serverless architecture, zero upkeep
+- ✅ **Powerful API** — Automate testing, bots, and workflows
+- ✅ **Beautiful UI** — Modern, dark mode, mobile-friendly
 
 ---
 
@@ -41,6 +61,24 @@
 ---
 
 ## Changelog
+
+### Version 1.1.1 — September 18, 2026
+
+**🔒 Security & Performance Enhancements:**
+
+#### Domain Access Control Improvements
+- Enhanced domain visibility control for admin-only domains
+- Improved session persistence across admin panel operations
+- Optimized domain configuration synchronization
+
+#### Technical Improvements
+- Implemented credential forwarding in all API communication layers
+- Enhanced database conflict resolution strategy for domain management
+- Improved cookie-based authentication flow across frontend and backend
+
+**Result:** More robust domain access control and improved admin panel reliability.
+
+---
 
 ### Version 1.1.0 — September 17, 2026
 
@@ -72,34 +110,52 @@
 
 ---
 
-## Why Sphixmail?
+## 💎 Sphixmail vs Other Solutions
 
-| Feature | Sphixmail | Alternatives |
-|---|---|---|
-| **Hosting cost** | Free (CF Workers free tier) | $5–$20/month VPS |
-| **Infrastructure** | Serverless, 275+ edge nodes | Single server |
-| **Latency** | < 50ms globally | Location-dependent |
-| **Data ownership** | ✅ You own your data | ❌ Third-party servers |
-| **REST API** | ✅ Built-in with API Keys | Limited / paid |
-| **Admin Panel** | ✅ Full-featured web UI | ❌ None |
-| **OTP Auto-extract** | ✅ Automatic | ❌ Manual |
-| **Multi-domain** | ✅ Unlimited via Admin Panel | Limited |
-| **Open source** | ✅ MIT License | Varies |
+**See why developers and privacy-conscious users choose Sphixmail:**
+
+| What You Get | 🎯 Sphixmail | ⚠️ Other Temp Mail | 💸 VPS Solution |
+|---|---|---|---|
+| **Monthly Cost** | **$0 forever** | Free (with ads) or $5-10/mo | $5-20/mo + maintenance |
+| **Speed** | ⚡ <50ms globally | 🐌 Varies, often slow | Depends on location |
+| **Privacy** | ✅ You own everything | ❌ They track & monetize | ✅ You own it |
+| **Ads** | ✅ Zero ads | ❌ Ads everywhere | ✅ No ads |
+| **Setup Time** | 10 minutes | Instant (but limited) | Hours/days |
+| **Maintenance** | ✅ Zero | None needed | Manual updates required |
+| **API Access** | ✅ Full REST API | Limited or paid | Build your own |
+| **Custom Domain** | ✅ Your domain | ❌ Their domain | ✅ Your domain |
+| **OTP Extraction** | ✅ Automatic | ❌ Manual copy | Not available |
+| **Admin Panel** | ✅ Full-featured | ❌ None | Build your own |
+| **Multi-Domain** | ✅ Unlimited | ❌ Single | ✅ Yes |
+| **Email Storage** | Your database | Their servers | Your server |
+| **Uptime** | 99.99% (Cloudflare) | Varies | Your responsibility |
+
+**Bottom line:** Sphixmail gives you enterprise features at zero cost, with the privacy of self-hosting and the reliability of Cloudflare's global network.
 
 ---
 
-## Live Demo
+## 🎮 Try It Now — Live Demo
 
-Try Sphixmail instantly at **[sawith.net](https://sawith.net)**
+**See Sphixmail in action at [sawith.net](https://sawith.net)**
 
-**Quick Start:**
-1. Visit [sawith.net](https://sawith.net)
-2. Click the arrow button to generate a random email address
-3. Copy the email and use it anywhere
-4. Return to see incoming messages in real-time
+### Get started in 30 seconds:
 
-**Full Documentation:** [docs.html](https://sawith.net/docs.html)  
-**API Reference:** [api-doc.html](https://sawith.net/api-doc.html) (interactive playground)
+1. **Visit** → [sawith.net](https://sawith.net)
+2. **Click** the arrow button (🡢) to generate a random email
+3. **Copy** your new disposable email address
+4. **Use it anywhere** — sign up for services, verify accounts, receive OTP codes
+5. **Check back** — Your emails appear instantly (auto-refresh every 2 seconds)
+
+### 🎯 Perfect for:
+- 🧪 **Testing** — QA, automation, integration tests
+- 🔐 **Privacy** — Keep your real email private
+- 🤖 **Bots** — Automated registration and verification
+- 📧 **One-time signups** — Avoid spam in your inbox
+- 💻 **Development** — Test email flows without real inboxes
+
+### 📚 Need Help?
+- **User Guide:** [docs.html](https://sawith.net/docs.html) — Step-by-step tutorials
+- **API Docs:** [api-doc.html](https://sawith.net/api-doc.html) — Interactive playground with live examples
 
 ---
 
@@ -123,85 +179,69 @@ Try Sphixmail instantly at **[sawith.net](https://sawith.net)**
 
 ---
 
-## Features
+## ✨ Features That Make Life Easier
 
-### 📬 Instant Disposable Inbox
-- Create a temporary email address instantly — **no sign-up, no login required**
-- Custom username or randomly generated (Indonesian-style names)
-- Multiple domains supported — user can pick at creation time
-- **Fast polling**: 2-second refresh for 30 seconds after inbox creation, then 3-second normal polling
-- **Smart paste**: paste a full email address (`user@domain.com`) to auto-fill username and select domain
-- **Auto-detect OTP**: extracts verification codes from plain text and HTML emails
-- **One-click OTP copy**: badge + copy button appears automatically when OTP detected
-- HTML emails rendered safely inside an isolated iframe
-- Last active inbox and selected domain persisted via `localStorage` across refreshes
+### 📬 Instant Email Addresses
+**No signup. No login. Just click and go.**
 
-### 🕐 Realtime WIB Clock
-- Live clock (Asia/Jakarta / WIB) displayed in the navbar
-- All email timestamps shown as relative time with full WIB datetime on hover
-- UTC-aware timestamp parsing — no timezone drift from SQLite storage
+- 🎲 **Random Generator** — Get creative Indonesian-style names like `langitsenja42@yourdomain.com`
+- ✏️ **Custom Names** — Choose your own username (e.g., `testing@yourdomain.com`)
+- 🌐 **Multiple Domains** — Pick from your configured domains
+- 💾 **Auto-Save** — Last inbox remembered across browser sessions
+- 📋 **Smart Paste** — Paste full email addresses to auto-fill
 
-### 🎨 Appearance Customization
-- **Custom background**: upload image with adjustable transparency
-- **Mascot/decoration**: position a character or logo anywhere on the page (X/Y coordinates + size)
-- **Smart change detection**: "unsaved changes" warning only appears when settings actually differ from saved state
-- All appearance settings managed through Admin Panel — no code changes required
+### ⚡ Lightning-Fast Inbox
+**See emails the moment they arrive.**
 
-### 🌐 REST API for Developers
-Connect Sphixmail to bots, scripts, or automation tools using API Keys:
+- 🔄 **Auto-Refresh** — Updates every 2-3 seconds automatically
+- 🎯 **OTP Detection** — Verification codes extracted and highlighted instantly
+- 📧 **HTML Support** — Emails rendered beautifully in safe sandboxed frames
+- ⏱️ **Live Timestamps** — Relative time with full WIB datetime on hover
+- 🕐 **WIB Clock** — Real-time Jakarta timezone clock in navbar
 
-```
-GET    /pub/domains/[apikey]            → list active domains
-GET    /pub/email/[email]/[apikey]      → validate email address
-GET    /pub/messages/[email]/[apikey]   → fetch all messages in inbox
-DELETE /pub/message/[id]/[apikey]       → delete a specific message
-GET    /pub/stats/[apikey]              → usage statistics
-GET    /pub/inbox/[email]/wait-otp      → wait for OTP email (no key required)
-```
+### 🎨 Customize Everything
+**Make it yours with zero code.**
 
-### ⚡ Automatic OTP Extraction
-OTP codes are extracted automatically from incoming emails (both plain text and HTML):
+- 🖼️ **Custom Background** — Upload your own image with transparency control
+- 🎭 **Mascot/Logo** — Position decorative images anywhere (X/Y + size)
+- 🌓 **Dark/Light Mode** — Easy toggle, preference saved
+- 🌍 **Bilingual** — English & Indonesian (Bahasa Indonesia)
+
+### 🔌 Developer-Friendly API
+**Automate everything with REST API.**
 
 ```bash
-curl "https://yourmail.com/pub/inbox/user@domain.com/wait-otp?timeout=30&subject_contains=OTP"
+# Get domains
+curl https://yourmail.com/pub/domains/YOUR_API_KEY
 
-# Response:
-# { "found": true, "otp": "123456", "message": {...} }
+# Wait for OTP (no API key needed!)
+curl "https://yourmail.com/pub/inbox/user@domain.com/wait-otp?timeout=30"
+# Returns: {"found": true, "otp": "123456", ...}
 ```
 
-Ideal for automated testing, registration bots, and scraping workflows.
+**Available Endpoints:**
+- ✅ List domains
+- ✅ Validate email addresses  
+- ✅ Fetch messages
+- ✅ Delete messages
+- ✅ Usage statistics
+- ✅ **Wait for OTP** — Perfect for automation & testing
 
-### 🛡️ Full-Featured Admin Panel
-Manage everything through a secure web-based admin panel:
+### 🛡️ Full Admin Control
+**Manage everything from a beautiful web dashboard.**
 
-- **Dashboard** — statistics and charts for received messages (7d / 6w / 12m / 7y)
-- **Domains** — add/remove domains, set open or admin-only access, toggle active state
-- **API Keys** — create, revoke, and manage keys with per-minute rate limits
-- **Settings** — configure all options without touching code
-- **Appearance** — customize background, mascot, and visual theme
-- **Access Control** — whitelist/blacklist username phrases with admin bypass
-
-### ⚙️ Zero-Code Configuration
-Everything configurable from the admin panel — no file edits or redeployment needed:
-
-| Setting | Description |
-|---|---|
-| Forbidden usernames | Block reserved words (admin, root, etc.) — exact match |
-| Whitelist phrases | Require username to contain specific phrases (e.g., "test", "demo") |
-| Blacklist phrases | Block usernames containing specific phrases (e.g., "spam", "abuse") |
-| Admin bypass | Logged-in admin can create any username, bypassing all restrictions |
-| Username length | Min and max character limits |
-| Daily inbox limit | Max inboxes per session per day |
-| Auto-delete messages | Delete after X minutes/hours/days/weeks |
-| Max messages per inbox | Storage cap per inbox |
-| Export / Import settings | Backup and restore configuration |
-
-### 🌍 Internationalization
-Available in **English 🇺🇸** and **Bahasa Indonesia 🇮🇩** — toggle in the top-right corner. Preference is saved automatically.
+- 📊 **Analytics** — Charts for 7d / 6w / 12m / 7y periods
+- 🌐 **Domain Management** — Add unlimited domains, set access control
+- 🔑 **API Keys** — Generate, revoke, set rate limits
+- ⚙️ **Zero-Code Config** — All settings via UI, no file editing
+- 🎨 **Appearance Editor** — Visual customization tools
+- 🚫 **Access Control** — Whitelist/blacklist usernames, admin bypass
 
 ---
 
-## Project Structure
+## 📁 Project Structure
+
+**Simple, organized, easy to understand:**
 
 ```
 sphixmail/
@@ -247,9 +287,24 @@ sphixmail/
 - A domain connected to Cloudflare (required to receive email)
 - [Node.js](https://nodejs.org) v18 or higher installed locally
 
+## 📦 Deployment Guide
+
+### Get Your Own Disposable Email Service in 10 Minutes
+
+**No coding skills needed.** Just copy-paste these commands and you're done.
+
+**What you'll need:**
+- ☁️ A free [Cloudflare](https://dash.cloudflare.com) account (takes 2 minutes to sign up)
+- 🌐 A domain name (any domain - even a $1/year domain works!)
+- 💻 [Node.js](https://nodejs.org) installed on your computer
+
+**Total cost:** $0/month forever (unless you exceed Cloudflare's generous free tier)
+
 ---
 
-### Step 1 — Clone & Install
+### Step 1 — Download Sphixmail
+
+Open your terminal and run:
 
 ```bash
 git clone https://github.com/devanonaufal/sphixmail.git
@@ -257,22 +312,26 @@ cd sphixmail
 npm install
 ```
 
+**What this does:** Downloads Sphixmail and installs required packages.
+
 ---
 
-### Step 2 — Create the Database
+### Step 2 — Create Your Database
 
 ```bash
 npm run db:create
 ```
 
-Copy the `database_id` from the output:
+You'll see output like this:
 
 ```
 ✅ Created your database: sphixmail-db
 database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
-Open `wrangler.toml` and paste the ID:
+**Copy that `database_id`** — you'll need it in the next step.
+
+Open the file `wrangler.toml` and find this section:
 
 ```toml
 [[d1_databases]]
@@ -682,26 +741,49 @@ Special thanks to the open-source community for these amazing tools.
 
 ---
 
+---
+
 <div align="center">
 
-## 🌟 Support This Project
+## 🚀 Ready to Deploy Your Own?
 
-If Sphixmail helps you, consider:
+**Get started in 10 minutes. Zero monthly costs. Complete control.**
 
-⭐ **[Star this repository](https://github.com/devanonaufal/sphixmail)** on GitHub
-
-🐛 **[Report issues](https://github.com/devanonaufal/sphixmail/issues)** to help improve it
-
-🔀 **[Contribute code](https://github.com/devanonaufal/sphixmail/pulls)** to add features
+### [📖 Read the Deployment Guide](#-deployment-guide) • [🎮 Try Live Demo](https://sawith.net)
 
 ---
 
-**Built with ❤️ by [Devano Naufal](https://github.com/devanonaufal)**
+## 💬 Get Help & Connect
 
-🌐 [Live Demo](https://sawith.net) • 📖 [Documentation](https://sawith.net/docs.html) • 🔌 [API Reference](https://sawith.net/api-doc.html)
+**Questions? Ideas? Found a bug?**
+
+💬 **[Discussions](https://github.com/devanonaufal/sphixmail/discussions)** — Ask questions, share ideas  
+🐛 **[Report Issues](https://github.com/devanonaufal/sphixmail/issues)** — Found a problem? Let us know  
+🔀 **[Contribute](https://github.com/devanonaufal/sphixmail/pulls)** — Pull requests welcome  
+⭐ **[Star on GitHub](https://github.com/devanonaufal/sphixmail)** — Show your support
 
 ---
 
-*Sphixmail - Free, Fast, and Privacy-Focused Temporary Email*
+## 🙏 Acknowledgments
+
+Built with powerful open-source tools:
+- [Cloudflare Workers](https://workers.cloudflare.com/) — Global edge computing platform
+- [Cloudflare D1](https://developers.cloudflare.com/d1/) — Serverless SQL database
+- [Hono](https://hono.dev/) — Ultrafast web framework
+- [Postal-MIME](https://github.com/postalsys/postal-mime) — RFC-compliant email parser
+
+---
+
+**Made with ❤️ by [Devano Naufal](https://github.com/devanonaufal)**
+
+🌐 [Live Demo](https://sawith.net) • 📖 [Documentation](https://sawith.net/docs.html) • 🔌 [API Docs](https://sawith.net/api-doc.html) • ⭐ [GitHub](https://github.com/devanonaufal/sphixmail)
+
+---
+
+### Sphixmail — Privacy-First Disposable Email
+
+**Deploy once. Run forever. Completely free.**
+
+<sub>MIT License • Copyright © 2026 Devano Naufal • Open Source Forever</sub>
 
 </div>

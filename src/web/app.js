@@ -171,7 +171,7 @@ function startNavClock() {
 const apiHeaders = () => ({ 'x-session-id': sessionId });
 
 async function apiGet(path) {
-  const r = await fetch(path, { headers: apiHeaders() });
+  const r = await fetch(path, { headers: apiHeaders(), credentials: 'include' });
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
@@ -180,6 +180,7 @@ async function apiPost(path, body) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...apiHeaders() },
     body: JSON.stringify(body),
+    credentials: 'include',
   });
   if (!r.ok) {
     const err = await r.json().catch(() => ({}));
@@ -188,7 +189,7 @@ async function apiPost(path, body) {
   return r.json();
 }
 async function apiDelete(path) {
-  const r = await fetch(path, { method: 'DELETE', headers: apiHeaders() });
+  const r = await fetch(path, { method: 'DELETE', headers: apiHeaders(), credentials: 'include' });
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
@@ -248,7 +249,12 @@ async function loadConfig() {
   sel.innerHTML = activeDomains.map(d => `<option value="${d}">@${d}</option>`).join('');
   // Restore last selected domain only if still active
   const savedDomain = localStorage.getItem('selectedDomain');
-  if (savedDomain && activeDomains.includes(savedDomain)) sel.value = savedDomain;
+  if (savedDomain && activeDomains.includes(savedDomain)) {
+    sel.value = savedDomain;
+  } else if (savedDomain) {
+    // Clear invalid cached domain (e.g. admin domain after logout)
+    localStorage.removeItem('selectedDomain');
+  }
   sel.addEventListener('change', () => localStorage.setItem('selectedDomain', sel.value));
 
   // Update active domains stat
@@ -643,7 +649,59 @@ async function init() {
   startNavClock();
 
   await ensureSession();
+
+  // Check admin session FIRST before loading config
+  const isAdmin = await (async () => {
+    try {
+      const r = await fetch('/admin/me');
+      return r.ok;
+    } catch {
+      return false;
+    }
+  })();
+  
+  // Load config AFTER admin check so backend knows if user is admin
   await loadConfig();
+  
+  const adminBtn = document.getElementById('navAdminBtn');
+  const profileWrap = document.getElementById('navProfileWrap');
+  
+  if (isAdmin) {
+    if (adminBtn) adminBtn.style.display = 'none';
+    if (profileWrap) {
+      profileWrap.style.display = 'block';
+      
+      // Setup profile dropdown
+      const profileBtn = document.getElementById('navProfileBtn');
+      const logoutBtn = document.getElementById('navProfileLogout');
+      
+      if (profileBtn) {
+        profileBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          profileWrap.classList.toggle('open');
+        });
+        
+        document.addEventListener('click', (e) => {
+          if (!profileWrap.contains(e.target)) {
+            profileWrap.classList.remove('open');
+          }
+        });
+      }
+      
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+          await fetch('/admin/logout', { method: 'POST' }).catch(() => {});
+          // Clear any cached domain data
+          localStorage.removeItem('selectedDomain');
+          // Small delay to ensure cookie is cleared server-side
+          await new Promise(r => setTimeout(r, 100));
+          // Force reload without cache to ensure fresh domain list
+          location.href = location.href.split('?')[0] + '?t=' + Date.now();
+        });
+      }
+    }
+  }
+
   await loadInboxes();
   loadStats();
   restartPoll();

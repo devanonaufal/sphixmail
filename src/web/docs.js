@@ -469,6 +469,55 @@ function initMobileSidebar() {
 }
 
 // ============================================================
+// Profile Dropdown
+// ============================================================
+async function checkAdminSession() {
+  try {
+    const r = await fetch('/admin/me');
+    return r.ok;
+  } catch {
+    return false;
+  }
+}
+
+function setupProfileDropdown() {
+  const profileBtn = document.getElementById('navProfileBtn');
+  const profileWrap = document.getElementById('navProfileWrap');
+  const logoutBtn = document.getElementById('navProfileLogout');
+
+  if (!profileBtn || !profileWrap) return;
+
+  profileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileWrap.classList.toggle('open');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!profileWrap.contains(e.target)) {
+      profileWrap.classList.remove('open');
+    }
+  });
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      await fetch('/admin/logout', { method: 'POST' }).catch(() => {});
+      location.reload();
+    });
+  }
+}
+
+async function initProfileMenu() {
+  const isAdmin = await checkAdminSession();
+  const adminBtn = document.getElementById('navAdminBtn');
+  const profileWrap = document.getElementById('navProfileWrap');
+  if (isAdmin) {
+    if (adminBtn) adminBtn.style.display = 'none';
+    if (profileWrap) profileWrap.style.display = 'block';
+    setupProfileDropdown();
+  }
+}
+
+// ============================================================
 // Init
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -480,4 +529,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initStarfield();
   initMobileSidebar();
+  initProfileMenu();
 });

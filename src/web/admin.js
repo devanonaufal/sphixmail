@@ -105,6 +105,7 @@ async function api(method, path, body){
   const r = await fetch('/admin'+path, {
     method, headers:{'Content-Type':'application/json'},
     body: body ? JSON.stringify(body) : undefined,
+    credentials: 'include',
   });
   const data = await r.json().catch(()=>({}));
   if(!r.ok) throw new Error(data.error || r.statusText);
@@ -153,7 +154,7 @@ function showAdmin(){
 /* ─── LOGOUT ────────────────────────────────────────────── */
 $('logoutBtn').addEventListener('click', async()=>{
   await api('POST','/logout').catch(()=>{});
-  location.reload();
+  location.href = '/';
 });
 
 /* ─── TABS ──────────────────────────────────────────────── */

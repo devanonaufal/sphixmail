@@ -172,6 +172,29 @@ export async function isInboxInSession(db: D1Database, sessionId: string, addres
 // Domains
 // ============================================================
 
+/**
+ * Get domains based on user role (similar to Tmail::getDomainsForCurrentUser)
+ * @param db Database instance
+ * @param isAdmin If true, returns 'open' + 'admin' domains. If false, returns only 'open' domains
+ */
+export async function getDomainsForUser(db: D1Database, isAdmin: boolean): Promise<Domain[]> {
+  if (isAdmin) {
+    // Admin can see: open + admin domains
+    return db
+      .prepare('SELECT * FROM domains WHERE is_active = 1 AND type IN (?, ?) ORDER BY added_at ASC')
+      .bind('open', 'admin')
+      .all<Domain>()
+      .then(r => r.results);
+  } else {
+    // Public can see: only open domains
+    return db
+      .prepare('SELECT * FROM domains WHERE is_active = 1 AND type = ? ORDER BY added_at ASC')
+      .bind('open')
+      .all<Domain>()
+      .then(r => r.results);
+  }
+}
+
 export async function getActiveDomains(db: D1Database, type?: 'open' | 'admin'): Promise<Domain[]> {
   if (type) {
     return db
@@ -192,7 +215,7 @@ export async function getAllDomains(db: D1Database): Promise<Domain[]> {
 
 export async function upsertDomain(db: D1Database, domain: string, type: 'open' | 'admin' = 'open'): Promise<void> {
   await db
-    .prepare('INSERT OR IGNORE INTO domains (domain, type) VALUES (?, ?)')
+    .prepare('INSERT INTO domains (domain, type) VALUES (?, ?) ON CONFLICT(domain) DO NOTHING')
     .bind(domain, type)
     .run();
 }

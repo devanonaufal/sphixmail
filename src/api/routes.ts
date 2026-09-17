@@ -10,6 +10,7 @@ import {
   linkInboxToSession,
   unlinkInboxFromSession,
   getActiveDomains,
+  getDomainsForUser,
   upsertDomain,
   incrementStat,
   logInboxCreated,
@@ -45,7 +46,15 @@ const api = new Hono<{ Bindings: ApiEnv }>();
 // ---- GET /config ----
 api.get('/config', async (c) => {
   await syncEnvDomains(c.env.DB, c.env.MAIL_DOMAIN);
-  const domains = await getActiveDomains(c.env.DB, 'open');
+  
+  // Check if user is admin
+  const isAdmin = await hasAdminSession(c.env.DB, c.req.header('cookie'));
+  
+  // Get domains based on user role (mimics Tmail::getDomainsForCurrentUser)
+  // Admin sees: open + admin domains
+  // Public sees: only open domains
+  const domains = await getDomainsForUser(c.env.DB, isAdmin);
+  
   const domainList = domains.map(d => d.domain);
   const appName = await getSetting<string>(c.env.DB, 'app_name') ?? c.env.APP_NAME ?? 'Sphixmail';
   
@@ -104,7 +113,15 @@ api.post('/inboxes', async (c) => {
 
   // Sync domains
   await syncEnvDomains(db, c.env.MAIL_DOMAIN);
-  const activeDomains = await getActiveDomains(db, 'open');
+  
+  // Check if user is admin
+  const isAdmin = await hasAdminSession(db, c.req.header('cookie'));
+  
+  // Get domains based on user role (mimics Tmail::createCustomEmail validation)
+  // Admin can use: open + admin domains
+  // Public can use: only open domains
+  const activeDomains = await getDomainsForUser(db, isAdmin);
+  
   const domainList = activeDomains.map(d => d.domain);
 
   // Domain selection
@@ -129,7 +146,6 @@ api.post('/inboxes', async (c) => {
   let address: string;
 
   if (requested) {
-    const isAdmin = await hasAdminSession(db, c.req.header('cookie'));
     console.log('[DEBUG] isAdmin:', isAdmin, 'requested:', requested);
     if (!isAdmin) {
       const normalizePhrases = (value: unknown): string[] => {

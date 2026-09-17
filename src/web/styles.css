@@ -261,6 +261,91 @@ html.custom-bg[data-theme="dark"] #starfield { opacity: 0.35; }
 }
 @media (max-width: 768px) { .nav-clock { display: none; } }
 
+/* ── Profile Dropdown ────────────────────────── */
+.nav-profile-wrap {
+  position: relative;
+}
+.nav-profile-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-2);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: var(--font);
+  transition: all var(--transition);
+}
+.nav-profile-btn:hover {
+  border-color: var(--border-hov);
+  color: var(--text-1);
+}
+.nav-profile-avatar {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--amber), var(--amber-dim));
+  color: #000;
+  font-weight: 800; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-profile-name {
+  margin-right: 2px;
+}
+.nav-profile-btn svg {
+  transition: transform var(--transition);
+}
+.nav-profile-wrap.open .nav-profile-btn svg {
+  transform: rotate(180deg);
+}
+.nav-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: all var(--transition);
+  z-index: 1000;
+}
+.nav-profile-wrap.open .nav-profile-dropdown {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.nav-profile-item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-size: 13px; font-weight: 500;
+  font-family: var(--font);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+}
+.nav-profile-item:hover {
+  background: var(--bg-card-hov);
+  color: var(--text-1);
+}
+.nav-profile-logout:hover {
+  background: var(--red-bg);
+  color: var(--red);
+}
+@media (max-width: 768px) {
+  .nav-profile-name { display: none; }
+  .nav-profile-btn { padding: 4px; }
+}
+
 /* ── Nav status pill ─────────────────────────── */
 .nav-status {
   display: flex; align-items: center; gap: 7px;
