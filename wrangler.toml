@@ -14,15 +14,15 @@ database_id = "23f25a2e-4899-45ce-893a-b65a3709d275"
 # ---- Custom domain routes ----
 # CHANGE THIS to your own domain (e.g. sphixmail.example.com)
 [[routes]]
-pattern = "sawith.net"
+pattern = "sphixray.com"
 custom_domain = true
 
 # ---- Environment variables ----
 # CHANGE THESE to your own values
 [vars]
 APP_NAME = "Sphixmail"
-MAIL_DOMAIN = "sawith.net"
-WEB_HOST = "sawith.net"
+MAIL_DOMAIN = "sphixray.com"
+WEB_HOST = "sphixray.com"
 ADMIN_PASSWORD_HASH = "3059e1b6d1ffdc4666159ff1861305ac2c2c33054009026a2a35234d7606d2a7"
 
 # ---- Static assets (web frontend) ----

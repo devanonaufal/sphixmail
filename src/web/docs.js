@@ -64,7 +64,7 @@ const translations = {
     // Section 2: Create
     create_title: 'Creating an Inbox',
     create_intro: 'Follow these steps to create your temporary inbox:',
-    create_step1: 'Open <code>sawith.net</code> in your browser',
+    create_step1: 'Open <code>sphixray.com</code> in your browser',
     create_step2: 'Choose one of these options:',
     create_step3: 'Select a domain from the dropdown (if multiple domains are available)',
     create_step4: 'If you entered a custom username, click the <strong>arrow button (→)</strong> on the right side of the input field',
@@ -105,7 +105,7 @@ const translations = {
     // Section 7: API
     api_title: 'Using the API',
     api_intro: 'Sphixmail provides a REST API for automation, bots, and testing workflows. You\'ll need an API key to access most endpoints. Contact the admin to request one.',
-    api_base: '<strong>Base URL:</strong> <code>https://sawith.net/pub/</code>',
+    api_base: '<strong>Base URL:</strong> <code>https://sphixray.com/pub/</code>',
     api_ref: 'For interactive documentation with live testing, visit <a href="/api-doc.html">API Reference</a>.',
     api_domains_title: 'List Active Domains',
     api_domains_desc: 'Returns all active email domains available for inbox creation.',
@@ -176,7 +176,7 @@ const translations = {
     // Section 2: Create
     create_title: 'Membuat Inbox',
     create_intro: 'Ikuti langkah berikut untuk membuat inbox temporer:',
-    create_step1: 'Buka <code>sawith.net</code> di browser Anda',
+    create_step1: 'Buka <code>sphixray.com</code> di browser Anda',
     create_step2: 'Pilih salah satu opsi berikut:',
     create_step3: 'Pilih domain dari dropdown (jika ada beberapa domain tersedia)',
     create_step4: 'Jika Anda memasukkan username custom, klik <strong>tombol panah (→)</strong> di sisi kanan input field',
@@ -217,7 +217,7 @@ const translations = {
     // Section 7: API
     api_title: 'Menggunakan API',
     api_intro: 'Sphixmail menyediakan REST API untuk otomasi, bot, dan testing workflow. Anda perlu API key untuk mengakses sebagian besar endpoint. Hubungi admin untuk memintanya.',
-    api_base: '<strong>Base URL:</strong> <code>https://sawith.net/pub/</code>',
+    api_base: '<strong>Base URL:</strong> <code>https://sphixray.com/pub/</code>',
     api_ref: 'Untuk dokumentasi interaktif dengan live testing, kunjungi <a href="/api-doc.html">Referensi API</a>.',
     api_domains_title: 'Daftar Domain Aktif',
     api_domains_desc: 'Mengembalikan semua domain email aktif yang tersedia untuk pembuatan inbox.',

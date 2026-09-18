@@ -13,7 +13,7 @@ Sphixmail is a fully self-hosted, temporary email solution that runs on Cloudfla
 
 **Deploy once. Run forever. Completely free.**
 
-[**Live Demo**](https://sawith.net) · [**Documentation**](https://sawith.net/docs.html) · [**API Reference**](https://sawith.net/api-doc.html) · [**GitHub**](https://github.com/devanonaufal/sphixmail)
+[**Live Demo**](https://sphixray.com) · [**Documentation**](https://sphixray.com/docs.html) · [**API Reference**](https://sphixray.com/api-doc.html) · [**GitHub**](https://github.com/devanonaufal/sphixmail)
 
 </div>
 
@@ -77,9 +77,9 @@ Traditional temp mail services often track your data, load slowly under ad netwo
 
 ## Live Demo
 
-Try Sphixmail at **[sawith.net](https://sawith.net)**:
+Try Sphixmail at **[sphixray.com](https://sphixray.com)**:
 
-1. Visit [sawith.net](https://sawith.net)
+1. Visit [sphixray.com](https://sphixray.com)
 2. Click the arrow button (→) to generate a random email address
 3. Copy your new disposable address
 4. Use it anywhere — sign-ups, verifications, OTP codes
@@ -92,7 +92,7 @@ Try Sphixmail at **[sawith.net](https://sawith.net)**:
 - One-time signups — avoid spam in your primary inbox
 - Development — test email flows without a real inbox
 
-**Guides:** [User Guide](https://sawith.net/docs.html) · [Interactive API Docs](https://sawith.net/api-doc.html)
+**Guides:** [User Guide](https://sphixray.com/docs.html) · [Interactive API Docs](https://sphixray.com/api-doc.html)
 
 ---
 
@@ -439,7 +439,7 @@ curl "https://yourmail.com/pub/inbox/user%40mail.example.com/wait-otp?timeout=30
 
 ### User Guide
 
-Visit **[sawith.net/docs.html](https://sawith.net/docs.html)** for full documentation, including:
+Visit **[sphixray.com/docs.html](https://sphixray.com/docs.html)** for full documentation, including:
 
 - Getting started — creating your first inbox
 - Email management — receiving, reading, and organizing messages
@@ -449,7 +449,7 @@ Visit **[sawith.net/docs.html](https://sawith.net/docs.html)** for full document
 
 ### Interactive API Documentation
 
-Visit **[sawith.net/api-doc.html](https://sawith.net/api-doc.html)** for:
+Visit **[sphixray.com/api-doc.html](https://sphixray.com/api-doc.html)** for:
 
 - A live API playground to test endpoints in your browser
 - Ready-to-use request/response examples
@@ -460,11 +460,11 @@ Visit **[sawith.net/api-doc.html](https://sawith.net/api-doc.html)** for:
 Documentation is available in **English** and **Bahasa Indonesia** — toggle the language in the top-right corner of any page.
 
 **Quick links:**
-- [Creating a custom username](https://sawith.net/docs.html#create)
-- [Understanding OTP auto-extraction](https://sawith.net/docs.html#otp)
-- [Using the wait-otp endpoint](https://sawith.net/docs.html#api-wait)
-- [Setting up API keys](https://sawith.net/admin.html)
-- [Multi-domain configuration](https://sawith.net/docs.html#api-domains)
+- [Creating a custom username](https://sphixray.com/docs.html#create)
+- [Understanding OTP auto-extraction](https://sphixray.com/docs.html#otp)
+- [Using the wait-otp endpoint](https://sphixray.com/docs.html#api-wait)
+- [Setting up API keys](https://sphixray.com/admin.html)
+- [Multi-domain configuration](https://sphixray.com/docs.html#api-domains)
 
 ---
 
@@ -622,7 +622,7 @@ Special thanks to the open-source community for these tools.
 
 Get started in 10 minutes, with zero monthly cost and complete control.
 
-[**Read the Deployment Guide**](#deployment-guide) · [**Try the Live Demo**](https://sawith.net)
+[**Read the Deployment Guide**](#deployment-guide) · [**Try the Live Demo**](https://sphixray.com)
 
 **Questions, ideas, or bugs?**
 [Discussions](https://github.com/devanonaufal/sphixmail/discussions) · [Report an Issue](https://github.com/devanonaufal/sphixmail/issues) · [Pull Requests](https://github.com/devanonaufal/sphixmail/pulls) · [Star on GitHub](https://github.com/devanonaufal/sphixmail)
@@ -631,7 +631,7 @@ Get started in 10 minutes, with zero monthly cost and complete control.
 
 **Made with ❤️ by [Devano Naufal](https://github.com/devanonaufal)**
 
-[Live Demo](https://sawith.net) · [Documentation](https://sawith.net/docs.html) · [API Docs](https://sawith.net/api-doc.html) · [GitHub](https://github.com/devanonaufal/sphixmail)
+[Live Demo](https://sphixray.com) · [Documentation](https://sphixray.com/docs.html) · [API Docs](https://sphixray.com/api-doc.html) · [GitHub](https://github.com/devanonaufal/sphixmail)
 
 <sub>MIT License · Copyright © 2026 Devano Naufal · Open Source Forever</sub>
 

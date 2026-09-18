@@ -163,7 +163,7 @@
         <h2 data-i18n="create_title">Creating an Inbox</h2>
         <p data-i18n="create_intro">Follow these steps to create your temporary inbox:</p>
         <ol>
-          <li data-i18n="create_step1">Open <code>sawith.net</code> in your browser</li>
+          <li data-i18n="create_step1">Open <code>sphixray.com</code> in your browser</li>
           <li data-i18n="create_step2">Choose one of these options:
             <ul style="margin-top:0.5rem">
               <li><strong>Custom username:</strong> Enter your preferred username in the input field</li>
@@ -228,7 +228,7 @@
       <section class="docs-section" id="api">
         <h2 data-i18n="api_title">Using the API</h2>
         <p data-i18n="api_intro">Sphixmail provides a REST API for automation, bots, and testing workflows. You'll need an API key to access most endpoints. Contact the admin to request one.</p>
-        <p data-i18n="api_base"><strong>Base URL:</strong> <code>https://sawith.net/pub/</code></p>
+        <p data-i18n="api_base"><strong>Base URL:</strong> <code>https://sphixray.com/pub/</code></p>
         <p data-i18n="api_ref">For interactive documentation with live testing, visit <a href="/api-doc.html">API Reference</a>.</p>
 
         <!-- API: List Domains -->
@@ -239,13 +239,13 @@
             <span class="docs-endpoint-url">/pub/domains/[apikey]</span>
           </div>
           <p data-i18n="api_domains_desc">Returns all active email domains available for inbox creation.</p>
-          <pre><code>curl https://sawith.net/pub/domains/YOUR_API_KEY</code></pre>
+          <pre><code>curl https://sphixray.com/pub/domains/YOUR_API_KEY</code></pre>
           <p><strong data-i18n="response">Response:</strong></p>
           <pre><code>{
   "success": true,
   "count": 1,
   "domains": [
-    { "domain": "sawith.net", "type": "open", "added_at": "2026-01-01T00:00:00Z" }
+    { "domain": "sphixray.com", "type": "open", "added_at": "2026-01-01T00:00:00Z" }
   ]
 }</code></pre>
         </div>
@@ -258,13 +258,13 @@
             <span class="docs-endpoint-url">/pub/email/[email]/[apikey]</span>
           </div>
           <p data-i18n="api_validate_desc">Checks if an email address is valid and follows username restrictions.</p>
-          <pre><code>curl https://sawith.net/pub/email/user@sawith.net/YOUR_API_KEY</code></pre>
+          <pre><code>curl https://sphixray.com/pub/email/user@sphixray.com/YOUR_API_KEY</code></pre>
           <p><strong data-i18n="response">Response:</strong></p>
           <pre><code>{
   "success": true,
-  "email": "user@sawith.net",
+  "email": "user@sphixray.com",
   "local": "user",
-  "domain": "sawith.net",
+  "domain": "sphixray.com",
   "message": "Email is valid and ready to use"
 }</code></pre>
         </div>
@@ -277,11 +277,11 @@
             <span class="docs-endpoint-url">/pub/messages/[email]/[apikey]</span>
           </div>
           <p data-i18n="api_messages_desc">Retrieves all messages for a specific inbox. Add <code>?limit=5</code> to limit results.</p>
-          <pre><code>curl https://sawith.net/pub/messages/user@sawith.net/YOUR_API_KEY</code></pre>
+          <pre><code>curl https://sphixray.com/pub/messages/user@sphixray.com/YOUR_API_KEY</code></pre>
           <p><strong data-i18n="response">Response:</strong></p>
           <pre><code>{
   "success": true,
-  "email": "user@sawith.net",
+  "email": "user@sphixray.com",
   "count": 2,
   "messages": [
     {
@@ -305,7 +305,7 @@
             <span class="docs-endpoint-url">/pub/message/[message_id]/[apikey]</span>
           </div>
           <p data-i18n="api_delete_desc">Permanently deletes a specific message by its ID.</p>
-          <pre><code>curl -X DELETE https://sawith.net/pub/message/msg_123/YOUR_API_KEY</code></pre>
+          <pre><code>curl -X DELETE https://sphixray.com/pub/message/msg_123/YOUR_API_KEY</code></pre>
           <p><strong data-i18n="response">Response:</strong></p>
           <pre><code>{
   "success": true,
@@ -322,7 +322,7 @@
             <span class="docs-endpoint-url">/pub/stats/[apikey]</span>
           </div>
           <p data-i18n="api_stats_desc">Returns usage statistics. Use <code>?filters=total_messages,unread_messages</code> to filter specific metrics.</p>
-          <pre><code>curl https://sawith.net/pub/stats/YOUR_API_KEY</code></pre>
+          <pre><code>curl https://sphixray.com/pub/stats/YOUR_API_KEY</code></pre>
           <p><strong data-i18n="response">Response:</strong></p>
           <pre><code>{
   "success": true,
@@ -350,7 +350,7 @@
             <li><code>subject_contains</code> — filter by keyword in subject</li>
             <li><code>after</code> — only return emails after this message ID</li>
           </ul>
-          <pre><code>curl "https://sawith.net/pub/inbox/user@sawith.net/wait-otp?timeout=30&subject_contains=OTP"</code></pre>
+          <pre><code>curl "https://sphixray.com/pub/inbox/user@sphixray.com/wait-otp?timeout=30&subject_contains=OTP"</code></pre>
           <p><strong data-i18n="response">Response:</strong></p>
           <pre><code>{
   "found": true,

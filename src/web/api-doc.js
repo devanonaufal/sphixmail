@@ -82,8 +82,8 @@ async function testEndpoint(endpoint){
   try{
     let url='';
     if(endpoint==='domains') url=`${base}/pub/domains/${key}`;
-    else if(endpoint==='validate') url=`${base}/pub/email/test@sawith.net/${key}`;
-    else if(endpoint==='messages') url=`${base}/pub/messages/test@sawith.net/${key}?limit=3`;
+    else if(endpoint==='validate') url=`${base}/pub/email/test@sphixray.com/${key}`;
+    else if(endpoint==='messages') url=`${base}/pub/messages/test@sphixray.com/${key}?limit=3`;
     else if(endpoint==='stats') url=`${base}/pub/stats/${key}?filters=total_messages,current_messages`;
     const r=await fetch(url);
     const json=await r.json();
