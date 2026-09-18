@@ -411,23 +411,24 @@ GET /pub/stats/[apikey]?filters=total_messages,unread_messages
 }
 ```
 
-### Wait for OTP (No API Key Required)
+### Wait for OTP
 
 Blocks until an OTP email arrives or the timeout is reached:
 
 ```
-GET /pub/inbox/[email]/wait-otp
-GET /pub/inbox/[email]/wait-otp?timeout=30&subject_contains=OTP&after=[message_id]
+GET /pub/inbox/[email]/wait-otp/[apikey]
+GET /pub/inbox/[email]/wait-otp/[apikey]?timeout=30&subject_contains=OTP&after=[message_id]
 ```
 
 | Parameter | Description | Default |
 |---|---|---|
+| `[apikey]` | API Key from Admin Panel | Required |
 | `timeout` | Max wait time in seconds (max: 60) | `30` |
 | `subject_contains` | Filter by keyword in subject | — |
 | `after` | Only return emails after this message ID | — |
 
 ```bash
-curl "https://yourmail.com/pub/inbox/user%40mail.example.com/wait-otp?timeout=30"
+curl "https://yourmail.com/pub/inbox/user%40mail.example.com/wait-otp/YOUR_API_KEY?timeout=30"
 # { "found": true, "otp": "123456", "message": { ... } }
 # or on timeout:
 # { "found": false, "message": "Timeout - no email received" }
