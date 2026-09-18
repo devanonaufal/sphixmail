@@ -171,9 +171,12 @@ pub.get('/stats/:apikey', async (c) => {
   return c.json({ success: true, data });
 });
 
-// ---- GET /inbox/[email]/wait-otp ----
+// ---- GET /inbox/[email]/wait-otp/[apikey] ----
 // Long-polling: wait until OTP email arrives or timeout
-pub.get('/inbox/:email/wait-otp', async (c) => {
+pub.get('/inbox/:email/wait-otp/:apikey', async (c) => {
+  // Validate API key first
+  if (!(await validateKey(c.env.DB, c.req.param('apikey')))) return unauthorized();
+
   const email = decodeURIComponent(c.req.param('email')).toLowerCase();
   const timeout = Math.min(parseInt(c.req.query('timeout') || '30'), 60); // max 60s
   const subjectContains = (c.req.query('subject_contains') || '').toLowerCase();

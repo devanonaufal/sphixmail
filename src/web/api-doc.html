@@ -304,8 +304,8 @@
     <div class="endpoint-card" id="ep-otp">
       <div class="endpoint-head">
         <span class="method get">GET</span>
-        <span class="endpoint-path">/pub/inbox/<span style="color:var(--amber)">[email]</span>/wait-otp</span>
-        <span class="endpoint-desc">Tunggu OTP masuk · Public (no key)</span>
+        <span class="endpoint-path">/pub/inbox/<span style="color:var(--amber)">[email]</span>/wait-otp/<span style="color:var(--amber)">[apikey]</span></span>
+        <span class="endpoint-desc">Tunggu OTP masuk</span>
         <span class="endpoint-arrow">▶</span>
       </div>
       <div class="endpoint-body">
@@ -313,17 +313,18 @@
         <table class="param-table"><thead><tr><th>Param</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
         <tbody>
           <tr><td>[email]</td><td>path</td><td>Alamat email inbox</td></tr>
+          <tr><td>[apikey]</td><td>path</td><td>API Key dari Admin Panel</td></tr>
           <tr><td>timeout</td><td>query</td><td>Max detik tunggu (default: 30, max: 60)</td></tr>
           <tr><td>subject_contains</td><td>query</td><td>Filter subject (opsional)</td></tr>
           <tr><td>after</td><td>query</td><td>Hanya ambil pesan setelah message_id ini</td></tr>
         </tbody></table>
         <div class="sub-label">Example Request</div>
-        <div class="code-block" id="curl-otp"><button class="code-copy" onclick="copyCode('curl-otp')">copy</button>curl "https://sphixmail.example.com/pub/inbox/user%40mail.example.com/wait-otp?timeout=30&subject_contains=OTP"</div>
+        <div class="code-block" id="curl-otp"><button class="code-copy" onclick="copyCode('curl-otp')">copy</button>curl "https://sphixmail.example.com/pub/inbox/user%40mail.example.com/wait-otp/YOUR_API_KEY?timeout=30&subject_contains=OTP"</div>
         <div class="sub-label">Response (found)</div>
         <div class="code-block">{"found":true,"message":{"id":"msg_abc","from":"noreply@service.com","subject":"Your OTP","received_at":"2026-09-10T00:00:00Z"},"otp":"123456"}</div>
         <div class="sub-label">Response (timeout)</div>
         <div class="code-block">{"found":false,"message":"Timeout - no email received"}</div>
-        <div class="api-key-note" style="margin-top:8px">ℹ OTP diekstrak dengan regex <code>\b\d{4,8}\b</code> dari body. Endpoint ini <strong>tidak membutuhkan API key</strong>.</div>
+        <div class="api-key-note" style="margin-top:8px">ℹ OTP diekstrak dengan regex <code>\b\d{4,8}\b</code> dari body. Endpoint ini <strong>membutuhkan API key</strong> untuk security dan rate limiting.</div>
       </div>
     </div>
   </div>
